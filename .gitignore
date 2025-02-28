@@ -1,0 +1,7 @@
+.idea
+
+# demo
+unpackage/
+nativeResources/android/agconnect-services.json
+nativeResources/android/google-services.json
+
