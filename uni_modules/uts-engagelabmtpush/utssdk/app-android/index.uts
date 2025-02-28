@@ -1,0 +1,105 @@
+/**
+ * 引用 Android 系统库，示例如下：
+ * import { Context } from "android.content.Context";
+ * [可选实现，按需引入]
+ */
+
+/* 引入 interface.uts 文件中定义的变量 */
+import { SetDebugMode, InitPush, InitPushParams, SetTcpSSL, SetBadge, AddTags, AddTagsParams, EventCallBack, EventCallBackParams } from '../interface.uts';
+
+/* 引入 unierror.uts 文件中定义的变量 */
+import { MyApiFailImpl } from '../unierror';
+
+import { UTSAndroid } from "io.dcloud.uts";
+
+import Application from 'android.app.Application';
+
+export * from './UserService.uts'
+export { UserReceiver } from "./UserReceiver.uts"
+
+/**
+ * 引入三方库
+ * [可选实现，按需引入]
+ *
+ * 在 Android 平台引入三方库有以下两种方式：
+ * 1、[推荐] 通过 仓储 方式引入，将 三方库的依赖信息 配置到 config.json 文件下的 dependencies 字段下。详细配置方式[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#dependencies)
+ * 2、直接引入，将 三方库的aar或jar文件 放到libs目录下。更多信息[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#android%E5%B9%B3%E5%8F%B0%E5%8E%9F%E7%94%9F%E9%85%8D%E7%BD%AE)
+ *
+ * 在通过上述任意方式依赖三方库后，使用时需要在文件中 import，如下示例：
+ * import { LottieAnimationView } from 'com.airbnb.lottie.LottieAnimationView'
+ */
+
+import Address from 'com.engagelab.privates.core.api.Address';
+import MTCorePrivatesApi from 'com.engagelab.privates.core.api.MTCorePrivatesApi';
+import MTPushPrivatesApi from 'com.engagelab.privates.push.api.MTPushPrivatesApi';
+
+
+
+/**
+ * UTSAndroid 为平台内置对象，不需要 import 可直接调用其API，[详见](https://uniapp.dcloud.net.cn/uts/utsandroid.html#utsandroid)
+ */
+
+
+export function testConfigGoogle(enable: boolean) : void {
+	MTCorePrivatesApi.testConfigGoogle(UTSAndroid.getAppContext(), enable);
+}
+
+export const setDebugMode: SetDebugMode = function (paramA : boolean) : void {
+	 MTCorePrivatesApi.configDebugMode(UTSAndroid.getAppContext(), paramA);
+}
+
+export const initPush: InitPush = function (param: InitPushParams) : void {
+	MTPushPrivatesApi.init(UTSAndroid.getAppContext());
+}
+
+export const setTcpSSL: SetTcpSSL = function (param: boolean) : void {
+	MTCorePrivatesApi.setTcpSSl(UTSAndroid.getAppContext(), param);
+}
+
+export const setBadge: SetBadge = function (param: number) : void {
+	MTPushPrivatesApi.setNotificationBadge(UTSAndroid.getAppContext(), param.toInt());
+}
+
+export const addTags: AddTags = function (param: AddTagsParams) : void {
+	// MTPushPrivatesApi.addTag(UTSAndroid.getAppContext(), param.seq.toInt(), param.tags);
+}
+
+export function setUserAlias(alias: string, seq: number) : void {
+	MTPushPrivatesApi.setAlias(UTSAndroid.getAppContext(), seq.toInt(), alias);
+}
+
+export function deleteUserAlias(seq: number) : void {
+     MTPushPrivatesApi.clearAlias(UTSAndroid.getAppContext(), seq.toInt());
+}
+
+export function getUserAlias(seq: number) : void {
+	MTPushPrivatesApi.getAlias(UTSAndroid.getAppContext(), seq.toInt());
+}
+
+export function getRegistrationId(): string {
+	const rid: String =  MTCorePrivatesApi.getRegistrationId(UTSAndroid.getAppContext());
+	return rid
+}
+
+export class MTPTool {
+	eventCallBack: EventCallBackParams | null = null;
+}
+
+export const mtptool : MTPTool = new MTPTool()
+
+@UTSJS.keepAlive
+export function addEventCallBack(param: EventCallBackParams) : void {
+	mtptool.eventCallBack = param;
+	console.log("addEventCallBack action:",mtptool);
+}
+
+
+
+export class MTAppHookProxy implements UTSAndroidHookProxy {
+  override onCreate(application: Application) {
+	//当前应用是否 取得用户同意隐私协议
+	console.log("MTAppHookProxy - onCreate");
+	// MTCorePrivatesApi.configDebugMode(UTSAndroid.getAppContext(), true);
+	// MTPushPrivatesApi.init(UTSAndroid.getAppContext());
+  }
+}

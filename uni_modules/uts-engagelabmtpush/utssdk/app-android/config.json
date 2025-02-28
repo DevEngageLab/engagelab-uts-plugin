@@ -1,0 +1,21 @@
+{
+	"dependencies": [
+			"com.engagelab:engagelab:4.5.2",
+			"com.engagelab.plugin:google:4.5.2",
+			"com.engagelab.plugin:honor:4.5.2",
+			"com.engagelab.plugin:honor_th_push:4.5.2",
+			"com.engagelab.plugin:huawei:4.5.2",
+			"com.engagelab.plugin:mi:4.5.2",
+			"com.engagelab.plugin:meizu:4.5.2",
+			"com.engagelab.plugin:oppo:4.5.2",
+			"com.engagelab.plugin:oppo_th_push:4.5.2",
+			"com.engagelab.plugin:vivo:4.5.2",
+			"com.google.firebase:firebase-messaging:23.1.1",
+			"com.huawei.hms:push:6.7.0.300",
+			"com.google.code.gson:gson:2.6.2",
+			"commons-codec:commons-codec:1.6",
+			"androidx.annotation:annotation:1.1.0"
+			
+		],
+  "minSdkVersion": "21"
+}

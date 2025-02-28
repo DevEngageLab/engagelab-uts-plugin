@@ -1,0 +1,129 @@
+<template>
+	<view>
+		
+		<button type="primary" @click="testConfigGoogleAction">testConfigGoogleAction</button>
+		<button type="primary" @click="initPushAction">initPushAction</button>
+		<button type="primary" @click="openDebugMode">openDebugMode</button>
+		<button type="primary" @click="closeDebugMode">closeDebugMode</button>
+		<button type="primary" @click="setBadgeAction">setBadgeAction</button>
+		<button type="primary" @click="addEventCallBack">addEventCallBack</button>
+		<button type="primary" @click="registrationId">registrationId</button>
+		<!-- <button type="primary" @click="addTagsAction">addTags</button>
+		<button type="primary" @click="setTagsAction">setTags</button>
+		<button type="primary" @click="getAllTagsAction">getAllTags</button>
+		<button type="primary" @click="deleteTagsAction">deleteTags</button>
+		<button type="primary" @click="cleanTagsAction">cleanTags</button>
+		<button type="primary" @click="vaildTagAction">vaildTag</button> -->
+		<button type="primary" @click="setAliasAction">setAlias</button>
+		<button type="primary" @click="deleteAliasAction">deleteAlias</button>
+		<button type="primary" @click="getAliasAction">getAlias</button>
+	</view>
+</template>
+
+<script>
+	import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBack, EventCallBackParams, addTags, AddTagsParams, AddTagsCallBack, setBadge, SetBadge, getRegistrationId, setUserAlias, deleteUserAlias, getUserAlias,testConfigGoogle } from "../../uni_modules/uts-engagelabmtpush";
+	
+	export default {
+		data() {
+			return {
+				title: 'Hello'
+			}
+		},
+		onLoad() {
+
+		},
+		methods: {
+			testConfigGoogleAction() {
+				// 线上环境请不要调用该函数，仅安卓生效
+				testConfigGoogle(true);
+			},
+			initPushAction() {
+				console.log('initPush');
+				// appkey对iOS生效，安卓的appkey需要配置在manifestPlaceholders.json中
+				let options = {
+					appkey: '5645a6e0c6ef00bb71facf21',
+					channel: 'test'
+				} as InitPushParams;
+				initPush(options);
+			},
+			openDebugMode() {
+				setDebugMode(true)
+			},
+			closeDebugMode() {
+				setDebugMode(false)
+			},
+			setBadgeAction() {
+				const badge: number = 2;
+				setBadge(badge);
+			},
+			addEventCallBack() {
+				console.log('initPush');
+				let eventCallBack = {
+					callback: (res: EventCallBack) => {
+						console.log(res);
+
+					}
+				} as EventCallBackParams;
+				addEventCallBack(eventCallBack);
+			},
+			registrationId() {
+				const rid = getRegistrationId();
+				console.log('getRegistrationId:');
+				console.log(rid);
+			},
+			addTagsAction(){
+				const tags = new Array<string>(["apple", "banana", "orange"]);
+				let options = {
+					tags: tags,
+					completion: (res: AddTagsCallBack) => {
+						console.log(res.code)
+						console.log(res.seq)
+						console.log(res.tags)
+					},
+					seq:1
+				} as AddTagsParams;
+				addTags(options)
+			},
+			setTagsAction(){
+				// todo
+			},
+			getAllTagsAction(){
+				// todo
+			},
+			deleteTagsAction(){
+				// todo
+			},
+			cleanTagsAction(){
+				// todo
+			},
+			vaildTagAction(){
+				// todo
+			},
+			setAliasAction(){
+				setUserAlias("snsn", 2);
+			},
+			deleteAliasAction(){
+				deleteUserAlias(3)
+			},
+			getAliasAction(){
+				getUserAlias(4);
+			}
+			
+		}
+		
+	}
+</script>
+
+<style>
+	.logo {
+		height: 100px;
+		width: 100px;
+		margin: 100px auto 25px auto;
+	}
+
+	.title {
+		font-size: 18px;
+		color: #8f8f94;
+    text-align: center;
+	}
+</style>

@@ -1,0 +1,15 @@
+{
+    "ENGAGELAB_PRIVATES_APPKEY" : "5645a6e0c6ef00bb71facf21",
+    "ENGAGELAB_PRIVATES_CHANNEL": "developer",
+    "ENGAGELAB_PRIVATES_PROCESS": ":remote",
+	"XIAOMI_APPID" : "MI-xxx",
+	"XIAOMI_APPKEY" : "MI-xxx",
+	"MEIZU_APPID" : "MZ-xxx",
+	"MEIZU_APPKEY" : "MZ-xxx",
+	"OPPO_APPID" :  "OP-xxx",
+	"OPPO_APPKEY" : "OP-xxx",
+	"OPPO_APPSECRET" : "OP-xxx",
+	"VIVO_APPID":  "xxx",
+	"VIVO_APPKEY" : "xxx",
+	"HONOR_APPID" : "xxx"
+}

@@ -1,0 +1,499 @@
+import Context from 'android.content.Context';
+import Intent from 'android.content.Intent';
+import Toast from 'android.widget.Toast';
+import Bundle from 'android.os.Bundle';
+
+import MTCommonReceiver from 'com.engagelab.privates.common.component.MTCommonReceiver';
+
+import MTCorePrivatesApi from 'com.engagelab.privates.core.api.MTCorePrivatesApi';
+import WakeMessage from 'com.engagelab.privates.core.api.WakeMessage';
+import AliasMessage from 'com.engagelab.privates.push.api.AliasMessage';
+import CustomMessage from 'com.engagelab.privates.push.api.CustomMessage';
+import InAppMessage from 'com.engagelab.privates.push.api.InAppMessage';
+import MobileNumberMessage from 'com.engagelab.privates.push.api.MobileNumberMessage';
+import NotificationMessage from 'com.engagelab.privates.push.api.NotificationMessage';
+import PlatformTokenMessage from 'com.engagelab.privates.push.api.PlatformTokenMessage';
+import TagMessage from 'com.engagelab.privates.push.api.TagMessage';
+
+import { mtptool , MTPTool } from "./index.uts"
+import { EventCallBack, EventCallBackParams } from '../interface.uts';
+
+/**
+ * 开发者继承MTCommonReceiver，可以获得sdk的方法回调
+ * <p>
+ * 所有回调均在主线程
+ */
+export class UserReceiver extends MTCommonReceiver {
+
+	constructor(){
+		super()
+		console.log("UserReceiver constructor");
+	}
+	
+	/**
+	  * 长连接状态回调
+	  *
+	  * @param context 不为空
+	  * @param enable  是否连接
+	  */
+	override onConnectStatus(context:Context, enable:boolean):void {
+	     console.log("onConnectStatus:");
+		 
+		 const map : Map<string, any> = new Map();
+		 map.set('enable', enable);
+		 console.log(map);
+		 
+		 const res : EventCallBack = {
+		   eventName: "onConnectStatus",
+		   eventData: map
+		 };
+		 mtptool.eventCallBack?.callback?.(res);
+	 }
+
+
+    /**
+     * 应用通知开关状态回调
+     *
+     * @param context 不为空
+     * @param enable  通知开关是否开，true为打开，false为关闭
+     */
+   override onNotificationStatus(context:Context, enable:boolean):void {
+        console.log("onNotificationStatus:");
+		
+		const map : Map<string, any> = new Map();
+		map.set('enable', enable);
+		console.log(map);
+		
+		const res : EventCallBack = {
+		  eventName: "onNotificationStatus",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+		
+    }
+
+   
+
+    /**
+     * 通知消息到达回调
+     *
+     * @param context             不为空
+     * @param notificationMessage 通知消息
+     */
+    override onNotificationArrived(context:Context, notificationMessage:NotificationMessage):void {
+        console.log("onNotificationArrived:");
+		this.callbackNotificationMessage(notificationMessage,"onNotificationArrived");
+    }
+	
+	
+	/**
+	 * 通知消息点击回调
+	 *
+	 * @param context             不为空
+	 * @param notificationMessage 通知消息
+	 */
+	override onNotificationClicked(context:Context, notificationMessage:NotificationMessage):void {
+	    console.log("onNotificationClicked:");
+		this.callbackNotificationMessage(notificationMessage,"onNotificationClicked");
+	}
+	
+	/**
+	 * 通知消息删除回调
+	 *
+	 * @param context             不为空
+	 * @param notificationMessage 通知消息
+	 */
+	override onNotificationDeleted(context:Context, notificationMessage:NotificationMessage):void {
+	    console.log("onNotificationDeleted:");
+		this.callbackNotificationMessage(notificationMessage,"onNotificationDeleted");
+	}
+
+    /**
+     * 通知消息在前台不显示
+     *
+     * @param context             不为空
+     * @param notificationMessage 通知消息
+     */
+    override onNotificationUnShow(context:Context,notificationMessage:NotificationMessage):void {
+        console.log("onNotificationUnShow:");
+		this.callbackNotificationMessage(notificationMessage,"onNotificationUnShow");
+    }
+
+    /**
+     * 自定义消息回调
+     *
+     * @param context       不为空
+     * @param customMessage 自定义消息
+     */
+    override onCustomMessage(context:Context, customMessage:CustomMessage):void {
+        console.log("onCustomMessage:");
+		
+		const map = new Map<string, any>();
+		map.set("content", customMessage.getContent() ?? "");
+		map.set("contentType", customMessage.getContentType() ?? "");
+		map.set("messageId", customMessage.getMessageId() ?? "");
+		map.set("platform", customMessage.getPlatform());
+		map.set("platformMessageId", customMessage.getPlatformMessageId() ?? "");
+		map.set("title", customMessage.getTitle() ?? "");
+		if (customMessage.getExtras() != null) {
+			const extraBundle: Bundle = customMessage.getExtras();
+			const extraMap = new Map<string, any>();
+			for (key in extraBundle.keySet()) {
+				const value = extraBundle.get(key);
+				if (value != null) {
+					extraMap.set(key, value);
+				}   
+			}
+			map.set("extras", extraMap);
+		}
+		
+		console.log(map);
+		
+		const res : EventCallBack = {
+		  eventName: "onCustomMessage",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+    }
+	
+	
+	
+
+    /**
+     * 标签消息回调
+     *
+     * @param context    不为空
+     * @param tagMessage 标签消息
+     */
+    override onTagMessage(context:Context, tagMessage:TagMessage):void {
+        console.log("onTagMessage:");
+		
+		const map = new Map<string, any>();
+		map.set("code", tagMessage.getCode());
+		map.set("queryTag", tagMessage.getQueryTag());
+		map.set("seq", tagMessage.getSequence());
+		
+		console.log("onTagMessage: map:",map);
+		
+		const res : EventCallBack = {
+		  eventName: "onTagMessage",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+		
+    }
+
+    /**
+     * 别名消息回调
+     *
+     * @param context      不为空
+     * @param aliasMessage 别名消息
+     */
+   override onAliasMessage(context:Context, aliasMessage:AliasMessage):void {
+        console.log("onAliasMessage:");
+		
+		const map = new Map<string, any>();
+		map.set("alias", aliasMessage.getAlias() ?? "");
+		map.set("code", aliasMessage.getCode());
+		map.set("seq", aliasMessage.getSequence());
+		
+		console.log("onAliasMessage: map:",map);
+		
+		const res : EventCallBack = {
+		  eventName: "onAliasMessage",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+    }
+
+    /**
+     * 厂商token消息回调
+     *
+     * @param context              不为空
+     * @param platformTokenMessage 厂商token消息
+     */
+    override onPlatformToken(context:Context, platformTokenMessage:PlatformTokenMessage):void {
+        console.log("onPlatformToken:");
+		
+		const map = new Map<string, any>();
+		map.set("platform", platformTokenMessage.getPlatform());
+		map.set("token", platformTokenMessage.getToken() ?? "");
+		
+		console.log("onPlatformToken: map:",map);
+		
+		const res : EventCallBack = {
+		  eventName: "onPlatformToken",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+		
+    }
+
+    /**
+     * 移动号码消息回调
+     *
+     * @param context             不为空
+     * @param mobileNumberMessage 移动号码消息
+     */
+    override onMobileNumber(context:Context, mobileNumberMessage:MobileNumberMessage):void {
+        console.log("onMobileNumber:");
+		
+    }
+
+    /**
+     * 被拉起回调
+     *
+     * @param context     不为空
+     * @param wakeMessage 被拉起消息
+     */
+    override onWake(context:Context, wakeMessage:WakeMessage):void {
+        console.log("onWake:");
+    }
+	
+	override onInAppMessageShow(context: Context, inAppMessage: InAppMessage):void {
+        console.log("[onInAppMessageShow] ");
+		
+		const map = new Map<string, any>();
+		map.set("messageId", inAppMessage.getMessageId() ?? "");
+		map.set("target", inAppMessage.getTarget() ?? "");
+		map.set("content", inAppMessage.getContent() ?? "");
+		map.set("clickAction", inAppMessage.getClick() ?? "");
+		map.set("extras", inAppMessage.getExtras() ?? "");
+		
+		console.log("onInAppMessageShow: map:",map);
+		
+		const res : EventCallBack = {
+		  eventName: "onInAppMessageShow",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+    }
+
+    override onInAppMessageClick(context: Context, inAppMessage: InAppMessage):void {
+        console.log("onInAppMessageClick");
+		
+		const map = new Map<string, any>();
+		map.set("messageId", inAppMessage.getMessageId() ?? "");
+		map.set("target", inAppMessage.getTarget() ?? "");
+		map.set("content", inAppMessage.getContent() ?? "");
+		map.set("clickAction", inAppMessage.getClick() ?? "");
+		map.set("extras", inAppMessage.getExtras() ?? "");
+		
+		console.log("onInAppMessageClick: map:",map);
+		
+		const res : EventCallBack = {
+		  eventName: "onInAppMessageClick",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+    }
+	
+	
+	callbackNotificationMessage(notificationMessage: NotificationMessage, name: string) {
+		const map = new Map<string, any>();
+		map.set("badge", notificationMessage.getBadge());
+		map.set("bigPicture", notificationMessage.getBigPicture() ?? "");
+		map.set("bigText", notificationMessage.getBigText() ?? "");
+		map.set("builderId", notificationMessage.getBuilderId());
+		map.set("category", notificationMessage.getCategory() ?? "");
+		map.set("channelId", notificationMessage.getChannelId() ?? "");
+		map.set("content", notificationMessage.getContent() ?? "");
+		map.set("defaults", notificationMessage.getDefaults());
+		if (notificationMessage.getExtras() != null) {
+			const extraBundle: Bundle = notificationMessage.getExtras();
+			const extraMap = new Map<string, any>();
+			for (key in extraBundle.keySet()) {
+				const value = extraBundle.get(key);
+				if (value != null) {
+			        extraMap.set(key, value);
+				}
+			}
+			map.set("extras", extraMap);
+		}
+		if (notificationMessage.getInbox() != null) {
+			map.set("inbox", notificationMessage.getInbox());
+		}
+		map.set("intentSsl", notificationMessage.getIntentSsl() ?? "");
+		map.set("intentUri", notificationMessage.getIntentUri() ?? "");
+		map.set("largeIcon", notificationMessage.getLargeIcon() ?? "");
+		map.set("messageId", notificationMessage.getMessageId() ?? "");
+		map.set("notificationId", notificationMessage.getNotificationId());
+		map.set("overrideMessageId", notificationMessage.getOverrideMessageId() ?? "");
+		map.set("platform", notificationMessage.getPlatform());
+		map.set("platformMessageId", notificationMessage.getPlatformMessageId() ?? "");
+		map.set("priority", notificationMessage.getPriority());
+		map.set("smallIcon", notificationMessage.getSmallIcon() ?? "");
+		map.set("sound", notificationMessage.getSound() ?? "");
+		map.set("style", notificationMessage.getStyle());
+		map.set("title", notificationMessage.getTitle() ?? "");
+		
+		console.log(name);
+		console.log(map);
+		
+		const res : EventCallBack = {
+		  eventName: name,
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+	}
+}
+
+
+// ----- 
+// 设置心跳时间间隔
+export function configHeartbeatInterval(interval: number):void {
+	 MTCorePrivatesApi.configHeartbeatInterval(UTSAndroid.getAppContext(), interval.toLong());
+}
+
+// 设置长连接重试次数
+export function configConnectRetryCount(retryCount: number):void {
+	MTCorePrivatesApi.configConnectRetryCount(UTSAndroid.getAppContext(), retryCount.toInt());
+}
+
+// 设置语言
+export function setUserLanguage(language: string):void {
+	MTPushPrivatesApi.configUserLanguage(UTSAndroid.getAppContext(),language);
+}
+
+// 前往通知开关设置页面
+export function goToAppNotificationSettings():void {
+	MTPushPrivatesApi.goToAppNotificationSettings(UTSAndroid.getAppContext());
+}
+
+// 开启 Push 推送，并持久化存储开关状态为true，默认是true
+export function turnOnPush():void {
+	 MTPushPrivatesApi.turnOnPush(UTSAndroid.getAppContext());
+}
+
+// 关闭 push 推送，并持久化存储开关状态为false，默认是true
+export function turnOffPush():void {
+	 MTPushPrivatesApi.turnOffPush(UTSAndroid.getAppContext());
+}
+
+// 设置通知展示时间，默认任何时间都展示
+export function setNotificationShowTime(beginHour: number, endHour: number, weekDays:Array<number>):void {
+	MTPushPrivatesApi.setNotificationShowTime(UTSAndroid.getAppContext(), beginHour.toInt(), endHour.toInt(), weekDays);
+}
+
+//  重置通知展示时间，默认任何时间都展示
+export function resetNotificationShowTime():void {
+	MTPushPrivatesApi.resetNotificationShowTime(UTSAndroid.getAppContext());
+}
+
+// 设置通知静默时间，默认任何时间都不静默
+export function setNotificationSilenceTime(beginHour: number, beginMinute: number, endHour:number, endMinute:number):void {
+	 MTPushPrivatesApi.setNotificationSilenceTime(UTSAndroid.getAppContext(), beginHour.toInt(), beginMinute.toInt(), endHour.toInt(), endMinute.toInt());
+}
+
+// 重置通知静默时间，默认任何时间都不静默
+export function resetNotificationSilenceTime():void {
+	MTPushPrivatesApi.resetNotificationSilenceTime(UTSAndroid.getAppContext());
+}
+
+// 设置通知栏的通知数量，默认数量为5
+export function setNotificationCount(count: number):void {
+	MTPushPrivatesApi.setNotificationCount(UTSAndroid.getAppContext(), count.toInt());
+}
+
+// 重置通知栏的通知数量，默认数量为5	
+export function resetNotificationCount():void {
+    MTPushPrivatesApi.resetNotificationCount(UTSAndroid.getAppContext());
+}
+
+// 展示自定义通知
+
+
+	/**
+     * 上报厂商通道通知到达
+     * <p>
+     * 走http/https上报
+     *
+     * param context           不为空
+     * param messageId         Engagelab消息id，不为空
+     * param platform          厂商，取值范围（1:mi、2:huawei、3:meizu、4:oppo、5:vivo、8:google）
+     * param platformMessageId 厂商消息id，可为空
+     */
+	
+export function reportNotificationArrived(messageId: string, platform: number, platformMessageId: string):void {
+	MTPushPrivatesApi.reportNotificationArrived(UTSAndroid.getAppContext(), messageId, platform.toByte(), platformMessageId);
+}
+
+	/**
+     * 上报厂商通道通知点击
+     * <p>
+     * 走http/https上报
+     *
+     * param context           不为空
+     * param messageId         Engagelab消息id，不为空
+     * param platform          厂商，取值范围（1:mi、2:huawei、3:meizu、4:oppo、5:vivo、8:google）
+     * param platformMessageId 厂商消息id，可为空
+     */
+	export function reportNotificationClicked(messageId: string, platform: number, platformMessageId: string):void {
+		MTPushPrivatesApi.reportNotificationClicked(UTSAndroid.getAppContext(), messageId, platform.toByte(), platformMessageId);
+	}
+	
+		/**
+	     * 上报厂商通道通知删除
+	     * <p>
+	     * 走http/https上报
+	     *
+	     * param context           不为空
+	     * param messageId         Engagelab消息id，不为空
+	     * param platform          厂商，取值范围（1:mi、2:huawei、3:meizu、4:oppo、5:vivo、8:google）
+	     * param platformMessageId 厂商消息id，可为空
+	     */
+	export function reportNotificationDeleted(messageId: string, platform: number, platformMessageId: string):void {
+		MTPushPrivatesApi.reportNotificationDeleted(UTSAndroid.getAppContext(), messageId, platform.toByte(), platformMessageId);
+	}	
+	
+		/**
+	     * 上报厂商通道通知打开
+	     * <p>
+	     * 走http/https上报
+	     *
+	     * param context           不为空
+	     * param messageId         Engagelab消息id，不为空
+	     * param platform          厂商，取值范围（1:mi、2:huawei、3:meizu、4:oppo、5:vivo、8:google）
+	     * param platformMessageId 厂商消息id，可为空
+	     */
+	export function reportNotificationOpened(messageId: string, platform: number, platformMessageId: string):void {
+		MTPushPrivatesApi.reportNotificationOpened(UTSAndroid.getAppContext(), messageId, platform.toByte(), platformMessageId);
+	}	
+
+	/**
+     * 上传厂商token
+     * <p>
+     * 走tcp上传
+     *
+     * param context  不为空
+     * param platform 厂商，取值范围（1:mi、2:huawei、3:meizu、4:oppo、5:vivo、8:google）
+     * param token    厂商返回的token，不为空
+     */
+	
+	export function uploadPlatformToken(platform: number, token: string, region: string):void {
+		 MTPushPrivatesApi.uploadPlatformToken(UTSAndroid.getAppContext(), platform.toByte(), token, region);
+	}
+	
+	/**
+	 * 清除厂商token，成功后通过onPlatformToken回调，数据platform为-128，表示清除成功
+	 */
+	
+	export function clearPlatformToken():void {
+		MTPushPrivatesApi.clearPlatformToken(UTSAndroid.getAppContext());
+	}
+	
+	export function clearNotification(notifyId: number): void {
+		MTPushPrivatesApi.clearNotification(UTSAndroid.getAppContext(),notifyId);
+	}
+	
+	export function clearNotificationAll():void {
+		MTPushPrivatesApi.clearNotification(UTSAndroid.getAppContext());
+	}
+	
+	export function onFragmentResume(className: string):void {
+		 MTPushPrivatesApi.onFragmentResume(UTSAndroid.getAppContext(),className);
+	}
+	
+	export function onFragmentPause(className: string):void {
+		 MTPushPrivatesApi.onFragmentPause(UTSAndroid.getAppContext(),className);
+	}

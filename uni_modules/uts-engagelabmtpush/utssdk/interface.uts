@@ -1,0 +1,39 @@
+/**
+ * interface.uts
+ * uts插件接口定义文件，按规范定义接口文件可以在HBuilderX中更好的做到语法提示
+ */
+
+export type SetDebugMode = (paramA : boolean) => void
+
+export type InitPushParams = {
+  appkey : string,
+  channel : string
+}
+export type InitPush = (params : InitPushParams) => void
+
+export type SetTcpSSL = (param: boolean) => void
+
+export type SetBadge = (param: number) => void
+
+export type EventCallBack = {
+	eventName: string,
+	eventData: Map<string, any>
+}
+
+export type EventCallBackParams = {
+	callback?: (res: EventCallBack) => void
+}
+
+export type AddTagsCallBack = {
+	code : number,
+	tags: Set<string>,
+	seq: number
+}
+export type AddTagsParams = {
+	tags: Array<string>,
+	completion?: (res : AddTagsCallBack) => void
+	seq: number
+}
+export type AddTags = (param: AddTagsParams) => void
+
+

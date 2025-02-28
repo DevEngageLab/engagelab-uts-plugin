@@ -1,0 +1,344 @@
+/**
+ * 引用 iOS 系统库，示例如下：
+ * import { UIDevice } from "UIKit";
+ * [可选实现，按需引入]
+ */
+
+/* 引入 interface.uts 文件中定义的变量 */
+import { SetDebugMode, InitPush, InitPushParams, SetTcpSSL, SetBadge, AddTags, AddTagsParams,EventCallBack,EventCallBackParams} from '../interface.uts';
+
+/* 引入 unierror.uts 文件中定义的变量 */
+
+import { Data } from 'Assignables';
+import { App } from 'MarketplaceKit';
+import { Notification } from 'Foundation';
+import { Dictionary, Set, Error} from 'Swift';
+import { NSError } from 'Foundation';
+import { NSSet } from 'Foundation';
+
+/**
+ * 引入三方库
+ * [可选实现，按需引入]
+ *
+ * 在 iOS 平台引入三方库有以下两种方式：
+ * 1、通过引入三方库framework 或者.a 等方式，需要将 .framework 放到 ./Frameworks 目录下，将.a 放到 ./Libs 目录下。更多信息[详见](https://uniapp.dcloud.net.cn/plugin/uts-plugin.html#ios-平台原生配置)
+ * 2、通过 cocoaPods 方式引入，将要引入的 pod 信息配置到 config.json 文件下的 dependencies-pods 字段下。详细配置方式[详见](https://uniapp.dcloud.net.cn/plugin/uts-ios-cocoapods.html)
+ *
+ * 在通过上述任意方式依赖三方库后，使用时需要在文件中 import:
+ * 示例：import { LottieLoopMode	} from 'Lottie'
+ */
+
+// import { MTPushService } from 'MTPush'
+
+/**
+ * UTSiOS 为平台内置对象，不需要 import 可直接调用其API，[详见](https://uniapp.dcloud.net.cn/uts/utsios.html)
+ */
+
+export class MTPushHookModule implements UTSiOSHookProxy {
+	onCreate() {
+	}
+	
+	applicationDidFinishLaunchingWithOptions(application: UIApplication | null, launchOptions: Map<UIApplication.LaunchOptionsKey, any> | null = null): boolean {
+		    MTPushTool.launchOptions = launchOptions;
+			console.log("applicationDidFinishLaunchingWithOptions");
+		    return true
+		}
+	
+	// 远程通知注册成功时的回调函数。（打自定义基座时需要勾选 push 模块）
+		didRegisterForRemoteNotifications(deviceToken: Data | null) {
+			MTPushTool.registerDeviceToken(deviceToken);
+		}
+		// 远程通知注册失败时的回调函数。（打自定义基座时需要勾选 push 模块）
+		didFailToRegisterForRemoteNotifications(error: NSError | null) {
+	
+		}
+		
+		// 应用收到远程通知时的回调函数。（打自定义基座时需要勾选 push 模块）
+		didReceiveRemoteNotification(userInfo: Map<AnyHashable, any> | null) {
+		
+		}
+}
+
+class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate, MTPushNotiInMessageDelegate {
+	
+	eventCallBack: EventCallBackParams | null = null;
+	
+	
+	launchOptions: Map<UIApplication.LaunchOptionsKey, any> | null = null;
+	
+	initPush(param: InitPushParams) {
+		let entity = MTPushRegisterEntity()
+		let types = new MTPushAuthorizationOptions(rawValue=(MTPushAuthorizationOptions.alert.rawValue |
+		                                                              MTPushAuthorizationOptions.sound.rawValue |
+		                                                              MTPushAuthorizationOptions.badge.rawValue
+		                                                              ))
+		entity.types = Int(types.rawValue)
+		MTPushService.register(forRemoteNotificationConfig=entity, delegate=this)
+		MTPushService.setInAppMessageDelegate(this)
+		MTPushService.setNotiInMessageDelegate(this)
+		const method = Selector("didReceiveCustomMessage:")
+		NotificationCenter.default.addObserver(this, selector = method, name = NSNotification.Name.mtcNetworkDidReceiveMessage, object = null)
+		MTPushService.setup(withOption=this.launchOptions, appKey=param.appkey, channel=param.channel, apsForProduction=false);
+	}
+	
+	@objc  didReceiveCustomMessage(notification: Notification) {
+		let userInfo = notification.userInfo;
+		
+		// let userInfoJsonStr: string | null;
+		// try {
+		//     let data = UTSiOS.try(JSONSerialization.data(withJSONObject = userInfo, options = []))
+		//     userInfoJsonStr = String(data= data, encoding= String.Encoding.utf8)
+		// 	  console.log(userInfoJsonStr);
+		// } catch (e) {
+		//     console.log(e)
+		// }
+		
+	    // 回调
+	    let callback: EventCallBack = new EventCallBack();
+	    callback.eventName = "onCustomMessage";
+	    // callback.eventData = userInfoJsonStr;
+		callback.eventData = userInfo as Dictionary<String, Any>;
+	    this.eventCallBack?.callback?.(callback);
+	}
+	
+	
+	registerDeviceToken(token: Data | null) {
+		MTPushService.registerDeviceToken(token);
+	}
+	
+	// 通知回调
+	mtpNotificationCenter(center: UNUserNotificationCenter, @argumentLabel("willPresent") notification: UNNotification, @argumentLabel("withCompletionHandler") completionHandler: (code: Int) => Void) {
+	        console.log("willPresent noti");
+			const userInfo = notification.request.content.userInfo;
+			// let userInfoJsonStr: string | null;
+			// try {
+			//     let data = UTSiOS.try(JSONSerialization.data(withJSONObject = userInfo, options = []))
+			//     userInfoJsonStr = String(data= data, encoding= String.Encoding.utf8)
+			// 	  console.log(userInfoJsonStr);
+			// } catch (e) {
+			//     console.log(e)
+			// }
+			if ((notification.request.trigger?.isKind(of= UNPushNotificationTrigger.self)) != nil) {
+				MTPushService.handleRemoteNotification(userInfo);
+			}
+			// 回调
+			let callback: EventCallBack = new EventCallBack();
+			callback.eventName = "onNotificationArrived";
+			// callback.eventData = userInfoJsonStr;
+			callback.eventData = userInfo as Dictionary<String, Any>;
+			this.eventCallBack?.callback?.(callback);
+			
+	        completionHandler(NSInteger(UNNotificationPresentationOptions.alert.rawValue) |
+	                          NSInteger(UNNotificationPresentationOptions.sound.rawValue) |
+	                          NSInteger(UNNotificationPresentationOptions.badge.rawValue) )
+	}
+		
+    mtpNotificationCenter(center: UNUserNotificationCenter, @argumentLabel("didReceive") response: UNNotificationResponse, @argumentLabel("withCompletionHandler") completionHandler: () => Void) {
+		console.log("didReceiveResponse noti");
+		let userInfo = response.notification.request.content.userInfo;
+		// let userInfoJsonStr: string | null;
+		// try {
+		//      let data = UTSiOS.try(JSONSerialization.data(withJSONObject = userInfo, options = []))
+		//      userInfoJsonStr = String(data= data, encoding= String.Encoding.utf8)
+		// 	  console.log(userInfoJsonStr);
+		// } catch (e) {
+		//     console.log(e)
+		    
+		// }
+		if ((response.notification.request.trigger?.isKind(of= UNPushNotificationTrigger.self)) != nil) {
+			MTPushService.handleRemoteNotification(userInfo);
+		}
+		// 回调
+        let callback: EventCallBack = new EventCallBack();
+        callback.eventName = "onNotificationClicked";
+        // callback.eventData = userInfoJsonStr;
+		callback.eventData = userInfo as Dictionary<String, Any>;
+        this.eventCallBack?.callback?.(callback);
+		
+		completionHandler()
+		
+	 }
+	 
+	mtpNotificationCenter(center: UNUserNotificationCenter, @argumentLabel("openSettingsFor") notification: UNNotification) {
+	}
+	     
+	mtpNotificationAuthorization(status: MTPushAuthorizationStatus, @argumentLabel("withInfo") info: Map<AnyHashable, any>) {      
+	}
+	
+	// 应用内消息回调
+	mtPush(@argumentLabel("inAppMessageDidShow") inAppMessage: MTPushInAppMessage) {
+		const map : Map<string, any> = new Map();
+	    map.set("messageId", inAppMessage.mesageId);
+	    map.set("target", inAppMessage.target);
+		map.set("content", inAppMessage.content);
+	    map.set("title", inAppMessage.title);
+	    map.set("clickAction", inAppMessage.clickAction);
+	    map.set("extras", inAppMessage.extras);
+	       
+	    const callback : EventCallBack = {
+	        eventName: "onInAppMessageShow",
+	        eventData: map
+	    }; 
+		this.eventCallBack?.callback?.(callback);
+	}
+		
+	mtPush(@argumentLabel("inAppMessageDidClick") inAppMessage: MTPushInAppMessage) {
+		const map : Map<string, any> = new Map();
+		map.set("messageId", inAppMessage.mesageId);
+		map.set("target", inAppMessage.target);
+		map.set("content", inAppMessage.content);
+		map.set("title", inAppMessage.title);
+		map.set("clickAction", inAppMessage.clickAction);
+		map.set("extras", inAppMessage.extras);
+		   
+		const callback : EventCallBack = {
+		    eventName: "onInAppMessageClick",
+		    eventData: map
+		}; 
+		this.eventCallBack?.callback?.(callback);
+	}
+	
+	// 通知转inapp回调 
+	 mtPushNotiInMessageDidShow(@argumentLabel("withContent") content: Map<AnyHashable, any>) {
+	        const callback : EventCallBack = {
+	            eventName: "onNotiInMessageShow",
+	            eventData: content as Dictionary<String, Any>
+	        }; 
+	        this.eventCallBack?.callback?.(callback);
+	    }
+	    
+	mtPushNotiInMessageDidClick(@argumentLabel("withContent") content: Map<AnyHashable, any>) {
+	        const callback : EventCallBack = {
+	            eventName: "onNotiInMessageClick",
+	            eventData: content as Dictionary<String, Any>
+	        }; 
+	        this.eventCallBack?.callback?.(callback);
+	    }
+
+}
+
+const MTPushTool : MTPushModule = new MTPushModule()
+
+
+export const setDebugMode: SetDebugMode = function (paramA : boolean) : void {
+	if (paramA == true) {
+		MTPushService.setDebugMode();
+	}else {
+		MTPushService.setLogOFF();
+	}
+}
+
+export const initPush: InitPush = function (param: InitPushParams) : void {
+	MTPushTool.initPush(param);
+}
+
+export const setTcpSSL: SetTcpSSL = function (param: boolean) : void {
+	MTPushService.setTcpSSL(param);
+}
+
+export const setBadge: SetBadge = function (param: number) : void {
+	MTPushService.setBadge(param.toInt());
+	
+}
+
+export function addTags(param: AddTagsParams) : void {
+	
+	// const tags = param.tags as Set<String>
+	
+	//  const tags = ["Apple", "Banana", "Orange"] as NSSet
+	//  MTPushService.addTags(tags, completion=(iResCode: Int, iTags: Optional<Set<AnyHashable>>, seq:Int):void =>{
+	//             // let tagsArray = Array(iTags ?? [])
+	//             // let tagsString = "\(tagsArray)"
+	// 			console.log(iResCode)
+	           
+	// }, seq=param.seq.toInt())
+}
+
+
+export function setUserAlias(alias: string, seq: number) : void {
+	
+	 MTPushService.setAlias(alias, completion=(code: Int, alias: Optional<String>, seq: Int):void => {
+	            console.log("setAlias:",code);
+				const callback : EventCallBack = new EventCallBack()
+				
+				const map : Map<string, any> = new Map();
+				map.set('code', code);
+				map.set('seq', seq);
+				console.log(map);
+				
+				callback.eventName = "onAliasMessage";
+				callback.eventData = map;
+				MTPushTool.eventCallBack?.callback?.(callback);
+				
+	 }, seq= seq.toInt());
+}
+
+
+export function deleteUserAlias(seq: number) : void {
+	MTPushService.deleteAlias((code: Int, alias: Optional<String>, seq: Int):void =>{
+	            console.log("deleteAlias:",code);
+	            const callback : EventCallBack = new EventCallBack()
+	            
+	            const map : Map<string, any> = new Map();
+	            map.set('code', code);
+	            map.set('seq', seq);
+	            console.log(map);
+	            
+	            callback.eventName = "onAliasMessage";
+	            callback.eventData = map;
+	            MTPushTool.eventCallBack?.callback?.(callback);
+	}, seq= seq.toInt());
+	    
+}
+
+export function getUserAlias(seq: number) : void {
+
+   MTPushService.getAlias((code: Int, alias: Optional<String>, seq: Int):void =>{
+	            console.log("getAlias:",code);
+	            const callback : EventCallBack = new EventCallBack()
+	            
+	            const map : Map<string, any> = new Map();
+	            map.set('code', code);
+	            map.set('seq', seq);
+				map.set('alias', alias);
+	            console.log(map);
+	            
+	            callback.eventName = "onAliasMessage";
+	            callback.eventData = map;
+	            MTPushTool.eventCallBack?.callback?.(callback);
+	}, seq= seq.toInt());
+	
+}
+
+export function setUserLanguage(language: string):void {
+	 // MTPushService.setUserLanguage(language, completionHandler=(int: Int32, error:  NSError):void => {
+		 
+	 // });
+}
+
+export function pageEnter(page: string) : void {
+	MTPushService.pageEnter(to=page);
+}
+
+export function pageLeave(page: string) : void {
+	MTPushService.pageLeave(page)
+}
+
+
+@UTSJS.keepAlive
+export function addEventCallBack(param: EventCallBackParams) : void {
+	MTPushTool.eventCallBack = param;
+}
+
+export function getRegistrationId(): string {
+	const rid: String = MTPushService.registrationID()
+	return rid
+}
+
+
+
+
+
+// 安卓模块的，不用实现
+export function testConfigGoogle(enable: boolean) : void {
+}
