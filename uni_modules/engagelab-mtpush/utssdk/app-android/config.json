@@ -17,5 +17,18 @@
 			"androidx.annotation:annotation:1.1.0"
 			
 		],
-  "minSdkVersion": "19"
+  "minSdkVersion": "19",
+  "project": {
+  		"plugins": [
+			"com.google.gms.google-services",
+			"com.huawei.agconnect"
+  		],
+  		"dependencies": [
+			"com.google.gms:google-services:4.3.15",
+			"com.huawei.agconnect:agcp:1.9.1.300"
+  		],
+  		"repositories": [
+  			"maven { url 'https://developer.huawei.com/repo/' }"
+  		]
+  	}
 }
