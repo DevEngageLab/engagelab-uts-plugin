@@ -21,7 +21,7 @@
 </template>
 
 <script>
-	import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBack, EventCallBackParams, addTags, AddTagsParams, AddTagsCallBack, setBadge, SetBadge, getRegistrationId, setUserAlias, deleteUserAlias, getUserAlias,testConfigGoogle } from "../../uni_modules/uts-engagelabmtpush";
+	import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBack, EventCallBackParams, addTags, AddTagsParams, AddTagsCallBack, setBadge, SetBadge, getRegistrationId, setUserAlias, deleteUserAlias, getUserAlias,testConfigGoogle } from "../../uni_modules/engagelab-mtpush";
 	
 	export default {
 		data() {

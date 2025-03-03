@@ -15,7 +15,7 @@
 
 - 3.在项目中引用插件
 ```
-import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBack, EventCallBackParams, setBadge, SetBadge, getRegistrationId } from "@/uni_modules/uts-engagelabmtpush"
+import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBack, EventCallBackParams, setBadge, SetBadge, getRegistrationId } from "@/uni_modules/engagelab-mtpush"
 ```
 
 ## Android 配置 应用的 nativeResources/android 目录下新增 manifestPlaceholders.json 文件。 内容参考如下，根据自身项目填入正确的值。
@@ -38,8 +38,8 @@ import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBac
 }
 ```
 
-如果支持谷歌通道，在应用的 nativeResources/android 目录下，放入 agconnect-services.json 文件。
-如果支持华为通道，在应用的 nativeResources/android 目录下，放入 google-services.json 文件。
+如果支持谷歌通道，在应用的 nativeResources/android 目录下，放入 google-services.json 文件。
+如果支持华为通道，在应用的 nativeResources/android 目录下，放入 agconnect-services.json 文件。
 
 #### Android 厂商配置说明
 插件支持 OPPO VIVO 魅族 小米 华为 FCM 荣耀七大厂商推送接入，如需接入请对应配置上述厂商信息。
@@ -62,8 +62,8 @@ import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBac
 - param:返回的事件数据
   - param["event_name"]: 为事件类型
     - android:
-      - "onNotificationStatus":应用通知开关状态回调,内容类型为boolean，true为打开，false为关闭
-      - "onConnectStatus":长连接状态回调,内容类型为boolean，true为连接
+      - "onNotificationStatus":应用通知开关状态回调,Map格式。enable属性：true为打开，false为关闭
+      - "onConnectStatus":长连接状态回调, Map格式。enable属性：true为打开，false为关闭
       - "onNotificationArrived":通知消息到达回调，内容为通知消息体
       - "onNotificationClicked":通知消息点击回调，内容为通知消息体
       - "onNotificationDeleted":通知消息删除回调，内容为通知消息体

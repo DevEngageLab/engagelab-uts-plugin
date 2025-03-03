@@ -17,5 +17,5 @@
 			"androidx.annotation:annotation:1.1.0"
 			
 		],
-  "minSdkVersion": "21"
+  "minSdkVersion": "19"
 }

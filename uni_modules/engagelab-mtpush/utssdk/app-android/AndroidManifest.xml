@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="io.dcloud.uni_modules.uts_engagelabmtpush">
+    package="io.dcloud.uni_modules.engagelab_mtpush">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,7 +10,7 @@
     <application>
 
         <service
-            android:name="uts.sdk.modules.utsEngagelabmtpush.UserService"
+            android:name="uts.sdk.modules.engagelabMtpush.UserService"
             android:exported="false"
             android:process="${ENGAGELAB_PRIVATES_PROCESS}">
             <intent-filter>
@@ -19,7 +19,7 @@
         </service>
 
         <receiver
-            android:name="uts.sdk.modules.utsEngagelabmtpush.UserReceiver"
+            android:name="uts.sdk.modules.engagelabMtpush.UserReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.engagelab.privates.intent.USER_RECEIVER" />
