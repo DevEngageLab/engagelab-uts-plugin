@@ -42,7 +42,8 @@
 				// appkey对iOS生效，安卓的appkey需要配置在manifestPlaceholders.json中
 				let options = {
 					appkey: '5645a6e0c6ef00bb71facf21',
-					channel: 'test'
+					channel: 'test',
+					isProduction : false	
 				} as InitPushParams;
 				initPush(options);
 			},

@@ -78,7 +78,7 @@ class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate
 		MTPushService.setNotiInMessageDelegate(this)
 		const method = Selector("didReceiveCustomMessage:")
 		NotificationCenter.default.addObserver(this, selector = method, name = NSNotification.Name.mtcNetworkDidReceiveMessage, object = null)
-		MTPushService.setup(withOption=this.launchOptions, appKey=param.appkey, channel=param.channel, apsForProduction=false);
+		MTPushService.setup(withOption=this.launchOptions, appKey=param.appkey, channel=param.channel, apsForProduction=param.isProduction);
 	}
 	
 	@objc  didReceiveCustomMessage(notification: Notification) {

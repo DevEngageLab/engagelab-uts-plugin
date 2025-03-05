@@ -7,7 +7,8 @@ export type SetDebugMode = (paramA : boolean) => void
 
 export type InitPushParams = {
   appkey : string,
-  channel : string
+  channel : string,
+  isProduction: boolean
 }
 export type InitPush = (params : InitPushParams) => void
 
