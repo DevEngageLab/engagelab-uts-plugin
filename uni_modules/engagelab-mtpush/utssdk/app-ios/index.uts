@@ -78,6 +78,10 @@ class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate
 		MTPushService.setNotiInMessageDelegate(this)
 		const method = Selector("didReceiveCustomMessage:")
 		NotificationCenter.default.addObserver(this, selector = method, name = NSNotification.Name.mtcNetworkDidReceiveMessage, object = null)
+		const method1 = Selector("networkDidLogin:")
+		NotificationCenter.default.addObserver(this, selector = method1, name = NSNotification.Name.mtcNetworkDidLogin, object = null)
+		const method2 = Selector("networkDidClose:")
+		NotificationCenter.default.addObserver(this, selector = method2, name = NSNotification.Name.mtcNetworkDidClose, object = null)
 		MTPushService.setup(withOption=this.launchOptions, appKey=param.appkey, channel=param.channel, apsForProduction=param.isProduction);
 	}
 	
@@ -99,6 +103,28 @@ class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate
 	    // callback.eventData = userInfoJsonStr;
 		callback.eventData = userInfo as Dictionary<String, Any>;
 	    this.eventCallBack?.callback?.(callback);
+	}
+	
+	@objc networkDidLogin(notification: Notification) {
+		const map : Map<string, any> = new Map();
+		map.set('enable', true);
+		console.log(map);
+		const callback : EventCallBack = {
+		  eventName: "onConnectStatus",
+		  eventData: map
+		};
+		this.eventCallBack?.callback?.(callback);
+	}
+	
+	@objc networkDidClose(notification: Notification) {
+		const map : Map<string, any> = new Map();
+		map.set('enable', false);
+		console.log(map);
+		const callback : EventCallBack = {
+		  eventName: "onConnectStatus",
+		  eventData: map
+		};
+		this.eventCallBack?.callback?.(callback);
 	}
 	
 	
@@ -336,6 +362,20 @@ export function getRegistrationId(): string {
 }
 
 
+export function getNotiAuth():void {
+	MTPushService.requestNotificationAuthorization((status: MTPushAuthorizationStatus):void => {
+		 const map : Map<string, any> = new Map();
+		if (status == MTPushAuthorizationStatus.statusAuthorized) {
+			map.set('enable', true);
+		}else {
+			map.set('enable', false);
+		}
+		const callback : EventCallBack = new EventCallBack()
+		callback.eventName = "onNotificationStatus";
+		callback.eventData = map;
+		 MTPushTool.eventCallBack?.callback?.(callback);
+	})
+}
 
 
 

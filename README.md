@@ -75,10 +75,11 @@ import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBac
       - "onInAppMessageShow": 应用内消息展示
       - "onInAppMessageClick": 应用内消息点击
     - ios:
+	  - "onNotificationStatus":检测通知权限授权情况。Map格式。enable属性：true为打开，false为关闭。需要先调用getNotiAuth() 接口。
+	  - "onConnectStatus":长连接状态回调, Map格式。enable属性：true为打开，false为关闭 
       - "onNotificationArrived":通知消息到达回调，内容为通知消息体（同原生平台willPresentNotification回调）
       - "onNotificationClicked":通知消息点击回调，内容为通知消息体
       - "onCustomMessage":自定义消息回调，内容为通知消息体
-      - "onNotificationStatus":检测通知权限授权情况
       - "onTagMessage":tag操作回调 //todo
       - "onAliasMessage":alias操作回调
       - "onInAppMessageShow": 应用内消息展示
@@ -174,7 +175,7 @@ const rid = getRegistrationId();
 
 ## 开启fcm测试模式
 
-### testConfigGoogle(enable: boolean) （仅android都支持）
+### testConfigGoogle(enable: boolean) （仅android支持）
 
 设置为true, 可以在国内测试fcm通道，需要在初始化函数之前调用。
 
@@ -194,4 +195,28 @@ export function testConfigGoogle(enable: boolean) : void
 
 ```js
 testConfigGoogle(true);
+```
+
+## 检测通知授权情况
+
+### getNotiAuth() （仅iOS支持）
+
+调用该函数之前，请先调用 addEventCallBack(param: EventCallBackParams) : void 接口注册事件监听。
+
+回调 event_name 为 "onNotificationStatus" 事件。
+
+#### 接口定义
+
+```js
+export function getNotiAuth() : void 
+```
+
+#### 参数说明
+
+无
+
+#### 代码示例
+
+```js
+getNotiAuth();
 ```

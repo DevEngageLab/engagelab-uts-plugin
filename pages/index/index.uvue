@@ -2,6 +2,7 @@
 	<view>
 		
 		<button type="primary" @click="testConfigGoogleAction">testConfigGoogleAction</button>
+		<button type="primary" @click="getAuthIOS">getAuthIOS</button>
 		<button type="primary" @click="initPushAction">initPushAction</button>
 		<button type="primary" @click="openDebugMode">openDebugMode</button>
 		<button type="primary" @click="closeDebugMode">closeDebugMode</button>
@@ -21,6 +22,9 @@
 </template>
 
 <script>
+	// #ifdef APP-IOS 
+	import { getNotiAuth } from "../../uni_modules/engagelab-mtpush"
+	// #endif
 	import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBack, EventCallBackParams, addTags, AddTagsParams, AddTagsCallBack, setBadge, SetBadge, getRegistrationId, setUserAlias, deleteUserAlias, getUserAlias,testConfigGoogle } from "../../uni_modules/engagelab-mtpush";
 	
 	export default {
@@ -36,6 +40,11 @@
 			testConfigGoogleAction() {
 				// 线上环境请不要调用该函数，仅安卓生效
 				testConfigGoogle(true);
+			},
+			getAuthIOS() {
+				// #ifdef APP-IOS 
+				getNotiAuth();
+				// #endif
 			},
 			initPushAction() {
 				console.log('initPush');
