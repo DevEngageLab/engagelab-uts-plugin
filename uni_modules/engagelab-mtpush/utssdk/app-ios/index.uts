@@ -264,7 +264,7 @@ export const setTcpSSL: SetTcpSSL = function (param: boolean) : void {
 
 export const setBadge: SetBadge = function (param: number) : void {
 	MTPushService.setBadge(param.toInt());
-	
+	UIApplication.shared.applicationIconBadgeNumber = param.toInt();
 }
 
 export function addTags(param: AddTagsParams) : void {

@@ -172,6 +172,31 @@ function getRegistrationId(): string
 const rid = getRegistrationId();
 ```
 
+## 设置应用角标数量 （android/ios都支持）
+
+### function setBadge(param: number) : void 
+
+android: 仅华为/荣耀生效
+
+#### 接口定义
+
+```js
+function setBadge(param: number) : void 
+```
+
+#### 返回值
+
+无
+
+#### 代码示例
+
+```js
+ setBadge(2);
+```
+
+
+
+
 
 ## 开启fcm测试模式
 
