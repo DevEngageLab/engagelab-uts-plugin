@@ -7,6 +7,7 @@
 最低支持 iOS12。
 
 ## 插件市场地址
+ [插件市场地址](https://ext.dcloud.net.cn/plugin?id=22391)
 
 ## Demo
 [Github](https://github.com/DevEngageLab/engagelab-uts-plugin)
