@@ -2,7 +2,7 @@
  * Copyright (c) 2011 ~ 2017 Shenzhen MT. All rights reserved.
  */
 
-#define MTP_VERSION_NUMBER 4.5.1
+#define MTP_VERSION_NUMBER 5.0.0
 
 #import <Foundation/Foundation.h>
 
@@ -21,6 +21,7 @@ typedef void (^MTPushTagsOperationCompletion)(NSInteger iResCode, NSSet *iTags, 
 typedef void (^MTPushTagValidOperationCompletion)(NSInteger iResCode, NSSet *iTags, NSInteger seq, BOOL isBind);
 typedef void (^MTPushAliasOperationCompletion)(NSInteger iResCode, NSString *iAlias, NSInteger seq);
 typedef void (^MTPLiveActivityTokenCompletion)(NSInteger iResCode, NSString *iLiveActivityId, NSData *token, NSInteger seq);
+typedef void (^MTPushVoipTokenCompletion)(NSInteger iResCode, NSString *msg);
 
 extern NSString *const kMTCNetworkIsConnectingNotification; // 正在连接中
 extern NSString *const kMTCNetworkDidSetupNotification;     // 建立连接
@@ -235,7 +236,11 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  */
 + (void)registerForRemoteNotificationConfig:(MTPushRegisterEntity *)config delegate:(id<MTPushRegisterDelegate>)delegate;
 
-
+/*!
+ * @abstract  向EngagaLab服务器提交Device Token
+ *
+ * @param deviceToken 推送使用的Device Token
+ */
 + (void)registerDeviceToken:(NSData *)deviceToken;
 
 /*!
@@ -277,6 +282,13 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @param voipToken 推送使用的Voip Token
  */
 + (void)registerVoipToken:(NSData *)voipToken;
+
+/*!
+ * @abstract  向EngagaLab清除Voip Token
+ *
+ * @param completion 结果回调。 iResCode = 0 成功
+ */
++ (void)unregisterVoipToken:(MTPushVoipTokenCompletion)completion;
 
 /*!
  * @abstract  处理收到的 Voip 消息
