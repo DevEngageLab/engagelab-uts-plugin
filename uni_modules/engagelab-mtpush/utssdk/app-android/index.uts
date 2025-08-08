@@ -5,7 +5,7 @@
  */
 
 /* 引入 interface.uts 文件中定义的变量 */
-import { SetDebugMode, InitPush, InitPushParams, SetTcpSSL, SetBadge, AddTags, AddTagsParams, EventCallBack, EventCallBackParams } from '../interface.uts';
+import { SetDebugMode, InitPush, InitPushParams, SetTcpSSL, SetEnableResetOnDeviceChange, SetBadge, AddTags, AddTagsParams, EventCallBack, EventCallBackParams } from '../interface.uts';
 
 /* 引入 unierror.uts 文件中定义的变量 */
 import { MyApiFailImpl } from '../unierror';
@@ -54,6 +54,10 @@ export const initPush: InitPush = function (param: InitPushParams) : void {
 
 export const setTcpSSL: SetTcpSSL = function (param: boolean) : void {
 	MTCorePrivatesApi.setTcpSSl(UTSAndroid.getAppContext(), param);
+}
+
+export const setEnableResetOnDeviceChange: SetEnableResetOnDeviceChange = function (param: boolean) : void {
+	MTCorePrivatesApi.setEnableResetOnDeviceChange(UTSAndroid.getAppContext(), param);
 }
 
 export const setBadge: SetBadge = function (param: number) : void {

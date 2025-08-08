@@ -14,6 +14,8 @@ export type InitPush = (params : InitPushParams) => void
 
 export type SetTcpSSL = (param: boolean) => void
 
+export type SetEnableResetOnDeviceChange = (param: boolean) => void
+
 export type SetBadge = (param: number) => void
 
 export type EventCallBack = {

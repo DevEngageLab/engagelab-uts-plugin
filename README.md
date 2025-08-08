@@ -150,6 +150,32 @@ function setDebugMode(paramA : boolean) : void
 setDebugMode(true);//发布前要删除掉
 ```
 
+## 设置设备更换时重置RegistrationID功能
+
+### setEnableResetOnDeviceChange(enable: boolean) （android/ios都支持）
+
+开启或者关闭设备更换时重置RegistrationID的功能。若开启时，当检测到设备发生变化时（只有当设备型号发生变化时），会自动清除注册信息，重新注册。
+
+需要在 initPush 之前调用。
+
+默认为关闭。
+
+#### 接口定义
+
+```js
+function setEnableResetOnDeviceChange(enable: boolean): void
+```
+
+#### 参数说明
+
+- enable: 是否开启设备更换时重置RegistrationID功能，true为开启，false为关闭
+
+#### 代码示例
+
+```js
+setEnableResetOnDeviceChange(true);
+```
+
 ## 获取 RegistrationID （android/ios都支持）
 
 ### function getRegistrationId(): string
