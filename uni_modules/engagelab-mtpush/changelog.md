@@ -1,3 +1,6 @@
+## 1.0.5（2025-08-08）
+1. update ios sdk 5.1.0 & android sdk 5.1.0
+2. add setEnableResetOnDeviceChange api
 ## 1.0.3（2025-03-07）
 iOS：
 1. add api: getNotiAuth 
