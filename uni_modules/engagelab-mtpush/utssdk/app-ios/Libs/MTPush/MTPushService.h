@@ -2,7 +2,7 @@
  * Copyright (c) 2011 ~ 2017 Shenzhen MT. All rights reserved.
  */
 
-#define MTP_VERSION_NUMBER 5.0.0
+#define MTP_VERSION_NUMBER 5.1.0
 
 #import <Foundation/Foundation.h>
 
@@ -602,6 +602,13 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @param enable 是否开启语音播报功能 YES:打开，NO:关闭，默认为NO
  */
 + (void)enablePushTextToSpeech:(BOOL)enable;
+
+/**
+ * 是否开启设备变更重置rid的功能 (在初始化函数setupWithOption:...方法之前调用)
+ * @param enable 是否开启设备变更重置rid的功能 YES:打开，NO:关闭，默认为NO
+
+ */
++ (void)enableResetOnDeviceChange:(BOOL)enable;
 
 
 /*!
