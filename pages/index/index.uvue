@@ -9,12 +9,12 @@
 		<button type="primary" @click="setBadgeAction">setBadgeAction</button>
 		<button type="primary" @click="addEventCallBack">addEventCallBack</button>
 		<button type="primary" @click="registrationId">registrationId</button>
-		<!-- <button type="primary" @click="addTagsAction">addTags</button>
+		<button type="primary" @click="addTagsAction">addTags</button>
 		<button type="primary" @click="setTagsAction">setTags</button>
 		<button type="primary" @click="getAllTagsAction">getAllTags</button>
 		<button type="primary" @click="deleteTagsAction">deleteTags</button>
 		<button type="primary" @click="cleanTagsAction">cleanTags</button>
-		<button type="primary" @click="vaildTagAction">vaildTag</button> -->
+		<button type="primary" @click="vaildTagAction">vaildTag</button>
 		<button type="primary" @click="setAliasAction">setAlias</button>
 		<button type="primary" @click="deleteAliasAction">deleteAlias</button>
 		<button type="primary" @click="getAliasAction">getAlias</button>
@@ -25,7 +25,28 @@
 	// #ifdef APP-IOS 
 	import { getNotiAuth } from "../../uni_modules/engagelab-mtpush"
 	// #endif
-	import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBack, EventCallBackParams, addTags, AddTagsParams, AddTagsCallBack, setBadge, SetBadge, getRegistrationId, setUserAlias, deleteUserAlias, getUserAlias,testConfigGoogle } from "../../uni_modules/engagelab-mtpush";
+	import {  
+		InitPushParams, 
+		CollectControl, 
+		setCollectControl, 
+		initPush, 
+		setDebugMode, 
+		addEventCallBack, 
+		EventCallBack, 
+		EventCallBackParams, 
+		addTags, 
+		setTags,
+		deleteTags,
+		cleanTags,
+		getAllTags,
+		validTag,
+		setBadge, 
+		SetBadge, 
+		getRegistrationId, 
+		setUserAlias, 
+		deleteUserAlias, 
+		getUserAlias,
+		testConfigGoogle } from "../../uni_modules/engagelab-mtpush";
 	
 	export default {
 		data() {
@@ -48,6 +69,14 @@
 			},
 			initPushAction() {
 				console.log('initPush');
+				
+				// // #ifdef APP-ANDROID
+				// 	let control = {
+				// 		gaid: false
+				// 	} as CollectControl;
+				// 	setCollectControl(control);
+				// // #endif
+				
 				// appkey对iOS生效，安卓的appkey需要配置在manifestPlaceholders.json中
 				let options = {
 					appkey: '5645a6e0c6ef00bb71facf21',
@@ -82,32 +111,22 @@
 				console.log(rid);
 			},
 			addTagsAction(){
-				const tags = new Array<string>(["apple", "banana", "orange"]);
-				let options = {
-					tags: tags,
-					completion: (res: AddTagsCallBack) => {
-						console.log(res.code)
-						console.log(res.seq)
-						console.log(res.tags)
-					},
-					seq:1
-				} as AddTagsParams;
-				addTags(options)
+				addTags(1, ["apple", "banana", "orange"])
 			},
 			setTagsAction(){
-				// todo
+				setTags(2, ["apple", "banana", "orange"])
 			},
 			getAllTagsAction(){
-				// todo
+				getAllTags(3);
 			},
 			deleteTagsAction(){
-				// todo
+				deleteTags(4, ["banana"]);
 			},
 			cleanTagsAction(){
-				// todo
+				cleanTags(5);
 			},
 			vaildTagAction(){
-				// todo
+				validTag(6, "orange");
 			},
 			setAliasAction(){
 				setUserAlias("snsn", 2);

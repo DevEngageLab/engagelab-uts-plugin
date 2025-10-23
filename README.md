@@ -70,7 +70,7 @@ import {  InitPushParams, initPush, setDebugMode, addEventCallBack, EventCallBac
       - "onNotificationDeleted":通知消息删除回调，内容为通知消息体
       - "onCustomMessage":自定义消息回调，内容为通知消息体
       - "onPlatformToken":厂商token消息回调，内容为厂商token消息体
-      - "onTagMessage":tag操作回调 //todo
+      - "onTagMessage":tag操作回调
       - "onAliasMessage":alias操作回调
       - "onNotificationUnShow":在前台，通知消息不显示回调（后台下发的通知是前台信息时）
       - "onInAppMessageShow": 应用内消息展示

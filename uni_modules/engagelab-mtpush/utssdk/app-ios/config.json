@@ -12,6 +12,6 @@
 			"libz.tbd",
 			"libresolv.tbd"
 		],
-  "deploymentTarget": "10"
+  "deploymentTarget": "12"
 	
 }

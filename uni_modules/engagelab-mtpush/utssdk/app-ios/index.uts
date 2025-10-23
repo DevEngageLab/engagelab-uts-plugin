@@ -263,7 +263,7 @@ export const setTcpSSL: SetTcpSSL = function (param: boolean) : void {
 }
 
 export const setEnableResetOnDeviceChange: SetEnableResetOnDeviceChange = function (param: boolean) : void {
-	MTPushService.enableResetOnDeviceChange(param);
+	MTPushService.enableReset(onDeviceChange= param);
 }
 
 export const setBadge: SetBadge = function (param: number) : void {
@@ -271,18 +271,113 @@ export const setBadge: SetBadge = function (param: number) : void {
 	UIApplication.shared.applicationIconBadgeNumber = param.toInt();
 }
 
-export function addTags(param: AddTagsParams) : void {
-	
-	// const tags = param.tags as Set<String>
-	
-	//  const tags = ["Apple", "Banana", "Orange"] as NSSet
-	//  MTPushService.addTags(tags, completion=(iResCode: Int, iTags: Optional<Set<AnyHashable>>, seq:Int):void =>{
-	//             // let tagsArray = Array(iTags ?? [])
-	//             // let tagsString = "\(tagsArray)"
-	// 			console.log(iResCode)
-	           
-	// }, seq=param.seq.toInt())
+/**
+ *  覆盖tags
+ *  调用该接口会覆盖用户所有的tags
+ */
+export function setTags(sequence : Int, tags : string[]) : void {
+	console.log("setTags", sequence, tags)
+	// 单独定义回调函数，并明确指定其类型
+	const callback  = (iResCode : Int, iTags : Swift.Set<AnyHashable>  | null, seq : Int) => {
+		const result : Map<string, any> = new Map();
+		result.set('code', iResCode);
+		result.set('seq', seq);
+		result.set('tags', iTags);
+		console.log("setTags completion", result)
+		eventCallbackManager.triggerEvent("onTagMessage", result)
+	}
+	const setTags:Swift.Set<String> = new Swift.Set<String>(tags)
+	MTPushService.setTags(setTags, completion = callback, seq = sequence)
 }
+
+/**
+ *   增加tags
+ */
+export function addTags(sequence : Int, tags : string[]) : void {
+	console.log("addTags", sequence, tags)
+	// 单独定义回调函数，并明确指定其类型
+	const callback  = (iResCode : Int, iTags : Swift.Set<AnyHashable>  | null, seq : Int) => {
+		const result : Map<string, any> = new Map();
+		result.set('code', iResCode);
+		result.set('seq', seq);
+		result.set('tags', iTags);
+		console.log("addTags completion", result)
+		eventCallbackManager.triggerEvent("onTagMessage", result)
+	}
+	const setTags:Swift.Set<String> = new Swift.Set<String>(tags)
+	MTPushService.addTags(setTags, completion = callback, seq = sequence)
+}
+
+/**
+ *  删除指定tags
+ */
+export function deleteTags(sequence : Int, tags : string[]) : void {
+	console.log("deleteTags", sequence, tags)
+	// 单独定义回调函数，并明确指定其类型
+	const callback  = (iResCode : Int, iTags : Swift.Set<AnyHashable>  | null, seq : Int) => {
+		const result : Map<string, any> = new Map();
+		result.set('code', iResCode);
+		result.set('seq', seq);
+		result.set('tags', iTags);
+		console.log("deleteTags completion", result)
+		eventCallbackManager.triggerEvent("onTagMessage", result)
+	}
+	const setTags:Swift.Set<String> = new Swift.Set<String>(tags)
+	MTPushService.deleteTags(setTags, completion = callback, seq = sequence)
+}
+
+/**
+ *  清空所有tags
+ */
+export function cleanTags(sequence : Int) : void {
+	console.log("deleteTags", sequence)
+	// 单独定义回调函数，并明确指定其类型
+	const callback  = (iResCode : Int, iTags : Swift.Set<AnyHashable>  | null, seq : Int) => {
+		const result : Map<string, any> = new Map();
+		result.set('code', iResCode);
+		result.set('seq', seq);
+		result.set('tags', iTags);
+		console.log("cleanTags completion", result)
+		eventCallbackManager.triggerEvent("onTagMessage", result)
+	}
+	MTPushService.cleanTags(callback, seq = sequence)
+}
+
+/**
+ *  查询全部tags
+ */
+export function getAllTags(sequence : Int) : void {
+	console.log("getAllTags", sequence)
+	// 单独定义回调函数，并明确指定其类型
+	const callback  = (iResCode : Int, iTags : Swift.Set<AnyHashable>  | null, seq : Int) => {
+		const result : Map<string, any> = new Map();
+		result.set('code', iResCode);
+		result.set('seq', seq);
+		result.set('tags', iTags);
+		console.log("cleanTags completion", result)
+		eventCallbackManager.triggerEvent("onTagMessage", result)
+	}
+	MTPushService.getAllTags(callback, seq = sequence)
+}
+
+/**
+ *  验证tag是否绑定
+ */
+export function validTag(sequence : Int, tag: string) : void {
+	console.log("validTag", sequence, tag)
+	// 单独定义回调函数，并明确指定其类型
+	const callback  = (iResCode : Int, iTags : Swift.Set<AnyHashable>  | null, seq : Int, isBind: boolean) => {
+		const result : Map<string, any> = new Map();
+		result.set('code', iResCode);
+		result.set('seq', seq);
+		result.set('tags', iTags);
+		result.set('isBind', isBind);
+		console.log("validTag completion", result)
+		eventCallbackManager.triggerEvent("onTagMessage", result)
+	}
+	MTPushService.validTag(tag, completion = callback, seq = sequence)
+}
+
 
 
 export function setUserAlias(alias: string, seq: number) : void {
@@ -386,3 +481,63 @@ export function getNotiAuth():void {
 // 安卓模块的，不用实现
 export function testConfigGoogle(enable: boolean) : void {
 }
+
+
+// 事件回调管理类
+class EventCallbackManager {
+	// private callBack : EventCallBackParams | null = null
+	// private cachedEvents : Array<EventCallBack> = []
+
+	// setEventCallBack(param : EventCallBackParams) : void {
+	// 	console.log("setEventCallBack")
+	// 	this.callBack = param
+
+	// 	// 如果有缓存的事件，立即回调
+	// 	if (this.cachedEvents.length > 0) {
+	// 		console.log("处理缓存事件，数量:", this.cachedEvents.length)
+	// 		for (let event of this.cachedEvents) {
+	// 			this.triggerCallBack(event)
+	// 		}
+	// 		this.cachedEvents = []
+	// 	}
+	// }
+
+	// triggerCallBack(event : EventCallBack) : void {
+	// 	if (this.callBack !== null) {
+	// 		console.log("触发回调")
+	// 		if (this.callBack!.callback !== null) {
+	// 			this.callBack!.callback!(event)
+	// 		} else {
+	// 			console.log("未设置回调函数，事件内容：", event)
+	// 		}
+	// 	} else {
+	// 		console.log("回调未设置，缓存事件")
+	// 		this.cachedEvents.push(event)
+	// 	}
+	// }
+
+	/**
+	 * 统一处理回调的方法
+	 * @param eventName 事件名称
+	 * @param eventData 事件数据（JSON字符串）
+	 */
+	triggerEvent(eventName : string, eventData : Map<string, any>) : void {
+		const callback : EventCallBack = {
+			eventName: eventName,
+			eventData: eventData
+		}
+		// this.triggerCallBack(callback)
+		MTPushTool.eventCallBack?.callback?.(callback);
+	}
+
+	// getCallBack() : EventCallBackParams | null {
+	// 	return this.callBack
+	// }
+
+	// hasCallBack() : boolean {
+	// 	return this.callBack !== null && this.callBack!.callback !== null
+	// }
+}
+
+// 全局事件回调管理器实例
+const eventCallbackManager = new EventCallbackManager()

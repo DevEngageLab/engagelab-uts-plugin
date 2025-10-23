@@ -37,6 +37,10 @@
                     "xxhdpi" : "",
                     "xxxhdpi" : ""
                 }
+            },
+            "android" : {
+                "minSdkVersion" : 23,
+                "targetSdkVersion" : 34
             }
         }
     },

@@ -1,7 +1,7 @@
 {
   "id": "engagelab-mtpush",
   "displayName": "engagelab-mtpush",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Engagelab Push官方UTS插件",
   "keywords": [
     "engagelab-mtpush",
@@ -48,10 +48,10 @@
         },
         "App": {
             "app-android": {
-                "minVersion": "19"
+                "minVersion": "23"
             },
             "app-ios": {
-                "minVersion": "10"
+                "minVersion": "12"
             },
             "app-harmony": "n"
         },

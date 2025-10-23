@@ -1,3 +1,7 @@
+## 1.0.6（2025-10-24）
+1. update ios sdk 5.2.0 & android sdk 5.2.0
+2. android add setCollectControl api
+3. android change minSdkVersion to 23
 ## 1.0.5（2025-08-08）
 1. update ios sdk 5.1.0 & android sdk 5.1.0
 2. add setEnableResetOnDeviceChange api

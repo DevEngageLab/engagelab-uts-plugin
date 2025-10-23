@@ -27,16 +27,16 @@ export type EventCallBackParams = {
 	callback?: (res: EventCallBack) => void
 }
 
-export type AddTagsCallBack = {
-	code : number,
-	tags: Set<string>,
-	seq: number
-}
-export type AddTagsParams = {
-	tags: Array<string>,
-	completion?: (res : AddTagsCallBack) => void
-	seq: number
-}
-export type AddTags = (param: AddTagsParams) => void
+// export type AddTagsCallBack = {
+// 	code : number,
+// 	tags: Set<string>,
+// 	seq: number
+// }
+// export type AddTagsParams = {
+// 	tags: Array<string>,
+// 	completion?: (res : AddTagsCallBack) => void
+// 	seq: number
+// }
+// export type AddTags = (param: AddTagsParams) => void
 
 

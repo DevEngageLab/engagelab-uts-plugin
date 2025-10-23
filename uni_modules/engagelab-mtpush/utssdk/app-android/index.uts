@@ -5,7 +5,7 @@
  */
 
 /* 引入 interface.uts 文件中定义的变量 */
-import { SetDebugMode, InitPush, InitPushParams, SetTcpSSL, SetEnableResetOnDeviceChange, SetBadge, AddTags, AddTagsParams, EventCallBack, EventCallBackParams } from '../interface.uts';
+import { SetDebugMode, InitPush, InitPushParams, SetTcpSSL, SetEnableResetOnDeviceChange, SetBadge, EventCallBack, EventCallBackParams } from '../interface.uts';
 
 /* 引入 unierror.uts 文件中定义的变量 */
 import { MyApiFailImpl } from '../unierror';
@@ -32,6 +32,7 @@ export { UserReceiver } from "./UserReceiver.uts"
 import Address from 'com.engagelab.privates.core.api.Address';
 import MTCorePrivatesApi from 'com.engagelab.privates.core.api.MTCorePrivatesApi';
 import MTPushPrivatesApi from 'com.engagelab.privates.push.api.MTPushPrivatesApi';
+import MTPushCollectControl from 'com.engagelab.privates.push.api.MTPushCollectControl';
 
 
 
@@ -52,6 +53,17 @@ export const initPush: InitPush = function (param: InitPushParams) : void {
 	MTPushPrivatesApi.init(UTSAndroid.getAppContext());
 }
 
+export type CollectControl = {
+	gaid : boolean
+}
+
+export const setCollectControl = function(control: CollectControl): void {
+	
+	var res = new MTPushCollectControl();
+	res.gaid = control.gaid;
+	MTPushPrivatesApi.setCollectControl(res);
+}
+
 export const setTcpSSL: SetTcpSSL = function (param: boolean) : void {
 	MTCorePrivatesApi.setTcpSSl(UTSAndroid.getAppContext(), param);
 }
@@ -64,8 +76,28 @@ export const setBadge: SetBadge = function (param: number) : void {
 	MTPushPrivatesApi.setNotificationBadge(UTSAndroid.getAppContext(), param.toInt());
 }
 
-export const addTags: AddTags = function (param: AddTagsParams) : void {
-	// MTPushPrivatesApi.addTag(UTSAndroid.getAppContext(), param.seq.toInt(), param.tags);
+export const addTags = function (sequence : Int, tags : string[]) : void {
+	MTPushPrivatesApi.addTag(UTSAndroid.getAppContext(), sequence, ...tags);
+}
+
+export const setTags = function (sequence : Int, tags : string[]) : void {
+	MTPushPrivatesApi.updateTag(UTSAndroid.getAppContext(), sequence, ...tags);
+}
+
+export const deleteTags = function (sequence : Int, tags : string[]) : void {
+	MTPushPrivatesApi.deleteTag(UTSAndroid.getAppContext(), sequence, ...tags);
+}
+
+export const cleanTags = function (sequence : Int) : void {
+	MTPushPrivatesApi.deleteAllTag(UTSAndroid.getAppContext(), sequence);
+}
+
+export const getAllTags = function (sequence : Int) : void {
+	MTPushPrivatesApi.queryAllTag(UTSAndroid.getAppContext(), sequence);
+}
+
+export const validTag = function (sequence : Int, tag : string) : void {
+	MTPushPrivatesApi.queryTag(UTSAndroid.getAppContext(), sequence, tag);
 }
 
 export function setUserAlias(alias: string, seq: number) : void {

@@ -2,7 +2,7 @@
  * Copyright (c) 2011 ~ 2017 Shenzhen MT. All rights reserved.
  */
 
-#define MTP_VERSION_NUMBER 5.1.0
+#define MTP_VERSION_NUMBER 5.2.0
 
 #import <Foundation/Foundation.h>
 
@@ -213,6 +213,12 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  */
 + (void)setTcpSSL:(BOOL)isSSL;
 
+/*!
+ * @abstract 允许SDK是否使用UDP，默认是允许
+ * @param enableUdp 允许使用UDP传YES, 不允许使用UDP传NO
+ * @discussion 此接口必须要在SDK启动前进行设置
+ */
++ (void)setEnableUdp:(BOOL)enableUdp;
 
 ///----------------------------------------------------
 /// @name APNs about 通知相关
@@ -524,6 +530,19 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  */
 + (void)resetBadge;
 
+
+/*!
+ * @abstract 设置角标(到服务器)
+ *
+ * @param value 新的值. 会覆盖服务器上保存的值(这个用户)
+ *
+ * @param completion 响应回调。成功则error为空，失败则error带有错误码及错误信息
+ *
+ * @discussion 功能参考 [MTPushService setBadge:] 说明.
+ *
+ */
++ (void)setBadge:(NSInteger)value completion:(void (^)(NSError *error))completion;
+
 ///----------------------------------------------------
 /// @name Other Feature 其他功能
 ///----------------------------------------------------
@@ -609,6 +628,11 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
 
  */
 + (void)enableResetOnDeviceChange:(BOOL)enable;
+
+
++ (void)setLCOn:(BOOL)enable;
+
++ (void)setLCCapacity:(NSInteger)capacity;
 
 
 /*!

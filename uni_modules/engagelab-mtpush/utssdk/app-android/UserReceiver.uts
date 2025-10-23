@@ -172,6 +172,8 @@ export class UserReceiver extends MTCommonReceiver {
 		map.set("code", tagMessage.getCode());
 		map.set("queryTag", tagMessage.getQueryTag());
 		map.set("seq", tagMessage.getSequence());
+		map.set("tags",tagMessage.getTags());
+		map.set("isBind",tagMessage.isQueryTagValid());
 		
 		console.log("onTagMessage: map:",map);
 		
