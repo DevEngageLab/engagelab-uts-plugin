@@ -1,3 +1,6 @@
+## 1.0.7（2026-01-20）
+1. update ios sdk 5.3.0 & android sdk 5.3.0
+2. android update setCollectControl api, add aid parameter support
 ## 1.0.6（2025-10-24）
 1. update ios sdk 5.2.0 & android sdk 5.2.0
 2. android add setCollectControl api

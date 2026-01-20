@@ -2,9 +2,11 @@
  * Copyright (c) 2011 ~ 2017 Shenzhen MT. All rights reserved.
  */
 
-#define MTP_VERSION_NUMBER 5.2.0
+#define MTP_VERSION_NUMBER 5.3.0
 
 #import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class CLRegion;
 @class UILocalNotification;
@@ -17,11 +19,11 @@
 @protocol MTPushInAppMessageDelegate;
 @protocol MTPushNotiInMessageDelegate;
 
-typedef void (^MTPushTagsOperationCompletion)(NSInteger iResCode, NSSet *iTags, NSInteger seq);
-typedef void (^MTPushTagValidOperationCompletion)(NSInteger iResCode, NSSet *iTags, NSInteger seq, BOOL isBind);
-typedef void (^MTPushAliasOperationCompletion)(NSInteger iResCode, NSString *iAlias, NSInteger seq);
-typedef void (^MTPLiveActivityTokenCompletion)(NSInteger iResCode, NSString *iLiveActivityId, NSData *token, NSInteger seq);
-typedef void (^MTPushVoipTokenCompletion)(NSInteger iResCode, NSString *msg);
+typedef void (^MTPushTagsOperationCompletion)(NSInteger iResCode, NSSet * _Nullable iTags, NSInteger seq);
+typedef void (^MTPushTagValidOperationCompletion)(NSInteger iResCode, NSSet * _Nullable iTags, NSInteger seq, BOOL isBind);
+typedef void (^MTPushAliasOperationCompletion)(NSInteger iResCode, NSString * _Nullable iAlias, NSInteger seq);
+typedef void (^MTPLiveActivityTokenCompletion)(NSInteger iResCode, NSString * _Nullable iLiveActivityId, NSData * _Nullable token, NSInteger seq);
+typedef void (^MTPushVoipTokenCompletion)(NSInteger iResCode, NSString * _Nullable msg);
 
 extern NSString *const kMTCNetworkIsConnectingNotification; // 正在连接中
 extern NSString *const kMTCNetworkDidSetupNotification;     // 建立连接
@@ -66,7 +68,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * iOS10 UNNotificationCategory
  * iOS8-iOS9 UIUserNotificationCategory
  */
-@property (nonatomic, strong) NSSet *categories;
+@property (nonatomic, strong, nullable) NSSet *categories;
 @end
 
 /*!
@@ -74,10 +76,10 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  */
 @interface MTPushNotificationIdentifier : NSObject<NSCopying, NSCoding>
 
-@property (nonatomic, copy) NSArray<NSString *> *identifiers; // 推送的标识数组
-@property (nonatomic, copy) UILocalNotification *notificationObj NS_DEPRECATED_IOS(4_0, 10_0);  // iOS10以下可以传UILocalNotification对象数据，iOS10以上无效
+@property (nonatomic, copy, nullable) NSArray<NSString *> *identifiers; // 推送的标识数组
+@property (nonatomic, copy, nullable) UILocalNotification *notificationObj NS_DEPRECATED_IOS(4_0, 10_0);  // iOS10以下可以传UILocalNotification对象数据，iOS10以上无效
 @property (nonatomic, assign) BOOL delivered NS_AVAILABLE_IOS(10_0); // 在通知中心显示的或待推送的标志，默认为NO，YES表示在通知中心显示的，NO表示待推送的
-@property (nonatomic, copy) void (^findCompletionHandler)(NSArray *results); // 用于查询回调，调用[findNotification:]方法前必须设置，results为返回相应对象数组，iOS10以下返回UILocalNotification对象数组；iOS10以上根据delivered传入值返回UNNotification或UNNotificationRequest对象数组（delivered传入YES，则返回UNNotification对象数组，否则返回UNNotificationRequest对象数组）
+@property (nonatomic, copy, nullable) void (^findCompletionHandler)(NSArray * _Nullable results); // 用于查询回调，调用[findNotification:]方法前必须设置，results为返回相应对象数组，iOS10以下返回UILocalNotification对象数组；iOS10以上根据delivered传入值返回UNNotification或UNNotificationRequest对象数组（delivered传入YES，则返回UNNotification对象数组，否则返回UNNotificationRequest对象数组）
 
 @end
 
@@ -86,8 +88,8 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * iOS10以上有效
  */
 @interface MTPushNotificationSound : NSObject <NSCopying, NSCoding>
-@property (nonatomic, copy) NSString *soundName; //普通通知铃声
-@property (nonatomic, copy) NSString *criticalSoundName NS_AVAILABLE_IOS(12.0); //警告通知铃声
+@property (nonatomic, copy, nullable) NSString *soundName; //普通通知铃声
+@property (nonatomic, copy, nullable) NSString *criticalSoundName NS_AVAILABLE_IOS(12.0); //警告通知铃声
 @property (nonatomic, assign) float criticalSoundVolume NS_AVAILABLE_IOS(12.0); //警告通知铃声音量，有效值在0~1之间，默认为1
 @end
 
@@ -97,21 +99,21 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  */
 @interface MTPushNotificationContent : NSObject<NSCopying, NSCoding>
 
-@property (nonatomic, copy) NSString *title;                // 推送标题
-@property (nonatomic, copy) NSString *subtitle;             // 推送副标题
-@property (nonatomic, copy) NSString *body;                 // 推送内容
-@property (nonatomic, copy) NSNumber *badge;                // 角标的数字。如果不需要改变角标传@(-1)
-@property (nonatomic, copy) NSString *action NS_DEPRECATED_IOS(8_0, 10_0); // 弹框的按钮显示的内容（IOS 8默认为"打开", 其他默认为"启动",iOS10以上无效）
-@property (nonatomic, copy) NSString *categoryIdentifier;   // 行为分类标识
-@property (nonatomic, copy) NSDictionary *userInfo;         // 本地推送时可以设置userInfo来增加附加信息，远程推送时设置的payload推送内容作为此userInfo
-@property (nonatomic, copy) NSString *sound;                // 声音名称，不设置则为默认声音
-@property (nonatomic, copy) MTPushNotificationSound *soundSetting NS_AVAILABLE_IOS(10.0);   //推送声音实体
-@property (nonatomic, copy) NSArray *attachments NS_AVAILABLE_IOS(10_0);                 // 附件，iOS10以上有效，需要传入UNNotificationAttachment对象数组类型
-@property (nonatomic, copy) NSString *threadIdentifier NS_AVAILABLE_IOS(10_0); // 线程或与推送请求相关对话的标识，iOS10以上有效，可用来对推送进行分组
-@property (nonatomic, copy) NSString *launchImageName NS_AVAILABLE_IOS(10_0);  // 启动图片名，iOS10以上有效，从推送启动时将会用到
-@property (nonatomic, copy) NSString *summaryArgument NS_AVAILABLE_IOS(12.0);  //插入到通知摘要中的部分参数。iOS12以上有效。
+@property (nonatomic, copy, nullable) NSString *title;                // 推送标题
+@property (nonatomic, copy, nullable) NSString *subtitle;             // 推送副标题
+@property (nonatomic, copy, nullable) NSString *body;                 // 推送内容
+@property (nonatomic, copy, nullable) NSNumber *badge;                // 角标的数字。如果不需要改变角标传@(-1)
+@property (nonatomic, copy, nullable) NSString *action NS_DEPRECATED_IOS(8_0, 10_0); // 弹框的按钮显示的内容（IOS 8默认为"打开", 其他默认为"启动",iOS10以上无效）
+@property (nonatomic, copy, nullable) NSString *categoryIdentifier;   // 行为分类标识
+@property (nonatomic, copy, nullable) NSDictionary *userInfo;         // 本地推送时可以设置userInfo来增加附加信息，远程推送时设置的payload推送内容作为此userInfo
+@property (nonatomic, copy, nullable) NSString *sound;                // 声音名称，不设置则为默认声音
+@property (nonatomic, copy, nullable) MTPushNotificationSound *soundSetting NS_AVAILABLE_IOS(10.0);   //推送声音实体
+@property (nonatomic, copy, nullable) NSArray *attachments NS_AVAILABLE_IOS(10_0);                 // 附件，iOS10以上有效，需要传入UNNotificationAttachment对象数组类型
+@property (nonatomic, copy, nullable) NSString *threadIdentifier NS_AVAILABLE_IOS(10_0); // 线程或与推送请求相关对话的标识，iOS10以上有效，可用来对推送进行分组
+@property (nonatomic, copy, nullable) NSString *launchImageName NS_AVAILABLE_IOS(10_0);  // 启动图片名，iOS10以上有效，从推送启动时将会用到
+@property (nonatomic, copy, nullable) NSString *summaryArgument NS_AVAILABLE_IOS(12.0);  //插入到通知摘要中的部分参数。iOS12以上有效。
 @property (nonatomic, assign) NSUInteger summaryArgumentCount NS_AVAILABLE_IOS(12.0); //插入到通知摘要中的项目数。iOS12以上有效。
-@property (nonatomic, copy) NSString *targetContentIdentifier NS_AVAILABLE_IOS(13.0);  // An identifier for the content of the notification used by the system to customize the scene to be activated when tapping on a notification.
+@property (nonatomic, copy, nullable) NSString *targetContentIdentifier NS_AVAILABLE_IOS(13.0);  // An identifier for the content of the notification used by the system to customize the scene to be activated when tapping on a notification.
 //iOS15以上的新增属性 interruptionLevel为枚举UNNotificationInterruptionLevel
 // The interruption level determines the degree of interruption associated with the notification
 @property (nonatomic, assign) NSUInteger interruptionLevel NS_AVAILABLE_IOS(15.0);
@@ -127,9 +129,9 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
 @interface MTPushNotificationTrigger : NSObject<NSCopying, NSCoding>
 
 @property (nonatomic, assign) BOOL repeat;                  // 设置是否重复，默认为NO
-@property (nonatomic, copy) NSDate *fireDate NS_DEPRECATED_IOS(2_0, 10_0);           // 用来设置触发推送的时间，iOS10以上无效
-@property (nonatomic, copy) CLRegion *region NS_AVAILABLE_IOS(8_0);                  // 用来设置触发推送的位置，iOS8以上有效，iOS10以上优先级为I，应用需要有允许使用定位的授权
-@property (nonatomic, copy) NSDateComponents *dateComponents NS_AVAILABLE_IOS(10_0); // 用来设置触发推送的日期时间，iOS10以上有效，优先级为II
+@property (nonatomic, copy, nullable) NSDate *fireDate NS_DEPRECATED_IOS(2_0, 10_0);           // 用来设置触发推送的时间，iOS10以上无效
+@property (nonatomic, copy, nullable) CLRegion *region NS_AVAILABLE_IOS(8_0);                  // 用来设置触发推送的位置，iOS8以上有效，iOS10以上优先级为I，应用需要有允许使用定位的授权
+@property (nonatomic, copy, nullable) NSDateComponents *dateComponents NS_AVAILABLE_IOS(10_0); // 用来设置触发推送的日期时间，iOS10以上有效，优先级为II
 @property (nonatomic, assign) NSTimeInterval timeInterval NS_AVAILABLE_IOS(10_0);    // 用来设置触发推送的时间，iOS10以上有效，优先级为III
 
 @end
@@ -139,10 +141,10 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  */
 @interface MTPushNotificationRequest : NSObject<NSCopying, NSCoding>
 
-@property (nonatomic, copy) NSString *requestIdentifier;    // 推送请求标识
-@property (nonatomic, copy) MTPushNotificationContent *content; // 设置推送的具体内容
-@property (nonatomic, copy) MTPushNotificationTrigger *trigger; // 设置推送的触发方式
-@property (nonatomic, copy) void (^completionHandler)(id result); // 注册或更新推送成功回调，iOS10以上成功则result为UNNotificationRequest对象，失败则result为nil;iOS10以下成功result为UILocalNotification对象，失败则result为nil
+@property (nonatomic, copy, nullable) NSString *requestIdentifier;    // 推送请求标识
+@property (nonatomic, copy, nullable) MTPushNotificationContent *content; // 设置推送的具体内容
+@property (nonatomic, copy, nullable) MTPushNotificationTrigger *trigger; // 设置推送的触发方式
+@property (nonatomic, copy, nullable) void (^completionHandler)(id _Nullable result); // 注册或更新推送成功回调，iOS10以上成功则result为UNNotificationRequest对象，失败则result为nil;iOS10以下成功result为UILocalNotification对象，失败则result为nil
 
 @end
 
@@ -151,12 +153,12 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  */
 @interface MTPushInAppMessage : NSObject
 
-@property (nonatomic, copy)   NSString *mesageId;    // 消息id
-@property (nonatomic, copy)   NSString *title;       // 标题
-@property (nonatomic, copy)   NSString *content;     // 内容
-@property (nonatomic, strong) NSArray  *target;      // 目标页面
-@property (nonatomic, copy)   NSString *clickAction; // 跳转地址
-@property (nonatomic, strong) NSDictionary *extras;  // 附加字段
+@property (nonatomic, copy, nullable)   NSString *mesageId;    // 消息id
+@property (nonatomic, copy, nullable)   NSString *title;       // 标题
+@property (nonatomic, copy, nullable)   NSString *content;     // 内容
+@property (nonatomic, strong, nullable) NSArray  *target;      // 目标页面
+@property (nonatomic, copy, nullable)   NSString *clickAction; // 跳转地址
+@property (nonatomic, strong, nullable) NSDictionary *extras;  // 附加字段
 
 @end
 
@@ -181,9 +183,9 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @discussion 提供SDK启动必须的参数, 来启动 SDK.
  * 此接口必须在 App 启动时调用, 否则 MTPush SDK 将无法正常工作.
  */
-+ (void)setupWithOption:(NSDictionary *)launchingOption
++ (void)setupWithOption:(nullable NSDictionary *)launchingOption
                  appKey:(NSString *)appKey
-                channel:(NSString *)channel
+                channel:(nullable NSString *)channel
        apsForProduction:(BOOL)isProduction;
 
 /*!
@@ -199,11 +201,11 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @discussion 提供SDK启动必须的参数, 来启动 SDK.
  * 此接口必须在 App 启动时调用, 否则 MTPush SDK 将无法正常工作.
  */
-+ (void)setupWithOption:(NSDictionary *)launchingOption
++ (void)setupWithOption:(nullable NSDictionary *)launchingOption
                  appKey:(NSString *)appKey
-                channel:(NSString *)channel
+                channel:(nullable NSString *)channel
        apsForProduction:(BOOL)isProduction
-  advertisingIdentifier:(NSString *)advertisingId;
+  advertisingIdentifier:(nullable NSString *)advertisingId;
 
 
 /*!
@@ -232,7 +234,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  *
  */
 + (void)registerForRemoteNotificationTypes:(NSUInteger)types
-                                categories:(NSSet *)categories;
+                                categories:(nullable NSSet *)categories;
 /*!
  * @abstract 新版本的注册方法（兼容iOS10）
  *
@@ -240,7 +242,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @param delegate 代理
  *
  */
-+ (void)registerForRemoteNotificationConfig:(MTPushRegisterEntity *)config delegate:(id<MTPushRegisterDelegate>)delegate;
++ (void)registerForRemoteNotificationConfig:(MTPushRegisterEntity *)config delegate:(nullable id<MTPushRegisterDelegate>)delegate;
 
 /*!
  * @abstract  向EngagaLab服务器提交Device Token
@@ -258,8 +260,8 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @param seq  请求序列号
  */
 + (void)registerLiveActivity:(NSString *)activityAttributes
-            pushToStartToken:(NSData *)pushToStartToken
-                  completion:(MTPLiveActivityTokenCompletion)completion
+            pushToStartToken:(nullable NSData *)pushToStartToken
+                  completion:(nullable MTPLiveActivityTokenCompletion)completion
                         seq:(NSInteger)seq;
 
 /*!
@@ -273,8 +275,8 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @param seq  请求序列号
  */
 + (void)registerLiveActivity:(NSString *)liveActivityId
-                   pushToken:(NSData *)pushToken
-                  completion:(MTPLiveActivityTokenCompletion)completion
+                   pushToken:(nullable NSData *)pushToken
+                  completion:(nullable MTPLiveActivityTokenCompletion)completion
                          seq:(NSInteger)seq;
 
 /*!
@@ -294,7 +296,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  *
  * @param completion 结果回调。 iResCode = 0 成功
  */
-+ (void)unregisterVoipToken:(MTPushVoipTokenCompletion)completion;
++ (void)unregisterVoipToken:(nullable MTPushVoipTokenCompletion)completion;
 
 /*!
  * @abstract  处理收到的 Voip 消息
@@ -309,12 +311,12 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
 * @abstract 检测通知授权状态
 * @param completion 授权结果通过status值返回，详见MTCAuthorizationStatus
 */
-+ (void)requestNotificationAuthorization:(void (^)(MTPushAuthorizationStatus status))completion;
++ (void)requestNotificationAuthorization:(nullable void (^)(MTPushAuthorizationStatus status))completion;
 
 /*!
 * @abstract 跳转至系统设置页面，iOS8及以上有效
 */
-+ (void)openSettingsForNotification:(void (^)(BOOL success))completionHandler NS_AVAILABLE_IOS(8_0);
++ (void)openSettingsForNotification:(nullable void (^)(BOOL success))completionHandler NS_AVAILABLE_IOS(8_0);
 
 /*!
  * Tags操作接口
@@ -329,7 +331,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param seq 请求序列号
  */
 + (void)addTags:(NSSet<NSString *> *)tags
-     completion:(MTPushTagsOperationCompletion)completion
+     completion:(nullable MTPushTagsOperationCompletion)completion
             seq:(NSInteger)seq;
 
 /**
@@ -341,7 +343,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param seq 请求序列号
  */
 + (void)setTags:(NSSet<NSString *> *)tags
-     completion:(MTPushTagsOperationCompletion)completion
+     completion:(nullable MTPushTagsOperationCompletion)completion
             seq:(NSInteger)seq;
 
 /**
@@ -352,7 +354,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param seq 请求序列号
  */
 + (void)deleteTags:(NSSet<NSString *> *)tags
-        completion:(MTPushTagsOperationCompletion)completion
+        completion:(nullable MTPushTagsOperationCompletion)completion
                seq:(NSInteger)seq;
 
 /**
@@ -360,7 +362,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param completion 响应回调
  @param seq 请求序列号
  */
-+ (void)cleanTags:(MTPushTagsOperationCompletion)completion
++ (void)cleanTags:(nullable MTPushTagsOperationCompletion)completion
               seq:(NSInteger)seq;
 
 /**
@@ -369,7 +371,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param completion 响应回调，请在回调中获取查询结果
  @param seq 请求序列号
  */
-+ (void)getAllTags:(MTPushTagsOperationCompletion)completion
++ (void)getAllTags:(nullable MTPushTagsOperationCompletion)completion
                seq:(NSInteger)seq;
 
 /**
@@ -379,7 +381,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param seq 请求序列号
  */
 + (void)validTag:(NSString *)tag
-      completion:(MTPushTagValidOperationCompletion)completion
+      completion:(nullable MTPushTagValidOperationCompletion)completion
              seq:(NSInteger)seq;
 
 /**
@@ -390,7 +392,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param seq 请求序列号
  */
 + (void)setAlias:(NSString *)alias
-      completion:(MTPushAliasOperationCompletion)completion
+      completion:(nullable MTPushAliasOperationCompletion)completion
              seq:(NSInteger)seq;
 
 /**
@@ -399,7 +401,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param completion 响应回调
  @param seq 请求序列号
  */
-+ (void)deleteAlias:(MTPushAliasOperationCompletion)completion
++ (void)deleteAlias:(nullable MTPushAliasOperationCompletion)completion
                 seq:(NSInteger)seq;
 
 /**
@@ -408,7 +410,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  @param completion 响应回调
  @param seq 请求序列号
  */
-+ (void)getAlias:(MTPushAliasOperationCompletion)completion
++ (void)getAlias:(nullable MTPushAliasOperationCompletion)completion
              seq:(NSInteger)seq;
 
 
@@ -418,7 +420,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @discussion 如果 tags 数量超过限制数量, 则返回靠前的有效的 tags.
  * 建议设置 tags 前用此接口校验. SDK 内部也会基于此接口来做过滤.
  */
-+ (NSSet *)filterValidTags:(NSSet *)tags;
++ (nullable NSSet *)filterValidTags:(nullable NSSet *)tags;
 
 
 /*!
@@ -486,7 +488,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @discussion 旧的所有删除推送接口被废弃，使用此接口可以替换
  *
  */
-+ (void)removeNotification:(MTPushNotificationIdentifier *)identifier;
++ (void)removeNotification:(nullable MTPushNotificationIdentifier *)identifier;
 
 /*!
  * @abstract 查找推送 (支持iOS10，并兼容iOS10以下版本)
@@ -541,7 +543,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @discussion 功能参考 [MTPushService setBadge:] 说明.
  *
  */
-+ (void)setBadge:(NSInteger)value completion:(void (^)(NSError *error))completion;
++ (void)setBadge:(NSInteger)value completion:(nullable void (^)(NSError * _Nullable error))completion;
 
 ///----------------------------------------------------
 /// @name Other Feature 其他功能
@@ -556,7 +558,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @discussion 设置手机号码后，可实现“推送不到短信到”的通知方式，提高推送达到率。结果信息通过completion异步返回，也可将completion设置为nil不处理结果信息。
  *
  */
-+ (void)setMobileNumber:(NSString *)mobileNumber completion:(void (^)(NSError *error))completion;
++ (void)setMobileNumber:(nullable NSString *)mobileNumber completion:(nullable void (^)(NSError * _Nullable error))completion;
 
 ///----------------------------------------------------
 /// @name Logs and others 日志与其他
@@ -572,9 +574,9 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * registrationIDCompletionHandler:是新增的获取registrationID的方法，需要在block中获取registrationID,resCode为返回码,模拟器调用此接口resCode返回1011,registrationID返回nil.
  * 更多的理解请参考 MTPush 的文档.
  */
-+ (NSString *)registrationID;
++ (nullable NSString *)registrationID;
 
-+ (void)registrationIDCompletionHandler:(void(^)(int resCode,NSString *registrationID))completionHandler;
++ (void)registrationIDCompletionHandler:(nullable void(^)(int resCode, NSString * _Nullable registrationID))completionHandler;
 
 /*!
  * @abstract 打开日志级别到 Debug
@@ -606,7 +608,7 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @param handler  上报结果回调
  * 建议在登录成功之后再上报
  */
-+ (void)setUserLanguage:(NSString *)language completionHandler:(void(^)(int resCode, NSError *error))handler;
++ (void)setUserLanguage:(NSString *)language completionHandler:(nullable void(^)(int resCode, NSError * _Nullable error))handler;
 
 
 /**
@@ -672,14 +674,14 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @param center [UNUserNotificationCenter currentNotificationCenter] 新特性用户通知中心
  * @param notification 当前管理的通知对象
  */
-- (void)mtpNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification NS_AVAILABLE_IOS(12.0);
+- (void)mtpNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(nullable UNNotification *)notification NS_AVAILABLE_IOS(12.0);
 
 /*
  * 监测通知授权状态返回的结果
  * @param status 授权通知状态，详见MTCAuthorizationStatus
  * @param info 更多信息，预留参数
  */
-- (void)mtpNotificationAuthorization:(MTPushAuthorizationStatus)status withInfo:(NSDictionary *)info;
+- (void)mtpNotificationAuthorization:(MTPushAuthorizationStatus)status withInfo:(nullable NSDictionary *)info;
 
 @end
 
@@ -723,3 +725,5 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
 - (void)mtPushInAppMessageDidClick:(MTPushInAppMessage *)inAppMessage;
 
 @end
+
+NS_ASSUME_NONNULL_END

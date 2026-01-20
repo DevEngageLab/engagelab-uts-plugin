@@ -72,7 +72,8 @@
 				
 				// // #ifdef APP-ANDROID
 				// 	let control = {
-				// 		gaid: false
+				// 		gaid: false,
+				// 		aid: false
 				// 	} as CollectControl;
 				// 	setCollectControl(control);
 				// // #endif

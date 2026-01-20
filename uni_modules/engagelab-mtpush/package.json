@@ -1,7 +1,7 @@
 {
   "id": "engagelab-mtpush",
   "displayName": "engagelab-mtpush",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Engagelab Push官方UTS插件",
   "keywords": [
     "engagelab-mtpush",
@@ -10,7 +10,9 @@
 ],
   "repository": "https://github.com/DevEngageLab/engagelab-uts-plugin",
   "engines": {
-    "HBuilderX": "^3.6.8"
+    "HBuilderX": "^3.6.8",
+    "uni-app": "^3.6.15",
+    "uni-app-x": "^3.6.15"
   },
   "dcloudext": {
     "type": "uts",
@@ -30,58 +32,78 @@
       "data": "详情见 https://www.engagelab.com/license/privacy",
       "permissions": "   <uses-permission android:name=\"android.permission.INTERNET\" />\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n    <uses-permission android:name=\"android.permission.VIBRATE\" />"
     },
-    "npmurl": ""
+    "npmurl": "",
+    "darkmode": "x",
+    "i18n": "x",
+    "widescreen": "x"
   },
   "uni_modules": {
     "dependencies": [],
     "encrypt": [],
     "platforms": {
       "cloud": {
-        "tcb": "y",
-        "aliyun": "y",
-        "alipay": "y"
+        "tcb": "√",
+        "aliyun": "√",
+        "alipay": "√"
       },
       "client": {
-        "Vue": {
-          "vue2": "n",
-          "vue3": "n"
-        },
-        "App": {
-            "app-android": {
+        "uni-app": {
+          "vue": {
+            "vue2": "-",
+            "vue3": "-"
+          },
+          "web": {
+            "safari": "-",
+            "chrome": "-"
+          },
+          "app": {
+            "vue": "-",
+            "nvue": "-",
+            "android": {
+                "extVersion": "1.0.0",
                 "minVersion": "23"
             },
-            "app-ios": {
+            "ios": {
+                "extVersion": "1.0.0",
                 "minVersion": "12"
             },
-            "app-harmony": "n"
+            "harmony": "-"
+          },
+          "mp": {
+            "weixin": "-",
+            "alipay": "-",
+            "toutiao": "-",
+            "baidu": "-",
+            "kuaishou": "-",
+            "jd": "-",
+            "harmony": "-",
+            "qq": "-",
+            "lark": "-"
+          },
+          "quickapp": {
+            "huawei": "-",
+            "union": "-"
+          }
         },
-        "H5-mobile": {
-          "Safari": "n",
-          "Android Browser": "n",
-          "微信浏览器(Android)": "n",
-          "QQ浏览器(Android)": "n"
-        },
-        "H5-pc": {
-          "Chrome": "n",
-          "IE": "n",
-          "Edge": "n",
-          "Firefox": "n",
-          "Safari": "n"
-        },
-        "小程序": {
-          "微信": "n",
-          "阿里": "n",
-          "百度": "n",
-          "字节跳动": "n",
-          "QQ": "n",
-          "钉钉": "n",
-          "快手": "n",
-          "飞书": "n",
-          "京东": "n"
-        },
-        "快应用": {
-          "华为": "n",
-          "联盟": "n"
+        "uni-app-x": {
+          "web": {
+            "safari": "-",
+            "chrome": "-"
+          },
+          "app": {
+            "android": {
+                "extVersion": "1.0.0",
+                "minVersion": "23"
+            },
+            "ios": {
+                "extVersion": "1.0.0",
+                "minVersion": "12"
+            },
+            "harmony": "-"
+          },
+          "mp": {
+            "weixin": "-"
+          }
         }
       }
     }

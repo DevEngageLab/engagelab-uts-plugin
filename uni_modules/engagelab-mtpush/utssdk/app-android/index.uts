@@ -54,13 +54,19 @@ export const initPush: InitPush = function (param: InitPushParams) : void {
 }
 
 export type CollectControl = {
-	gaid : boolean
+	gaid? : boolean,
+	aid? : boolean
 }
 
 export const setCollectControl = function(control: CollectControl): void {
 	
 	var res = new MTPushCollectControl();
-	res.gaid = control.gaid;
+	if (control.gaid !== undefined) {
+		res.gaid = control.gaid;
+	}
+	if (control.aid !== undefined) {
+		res.aid = control.aid;
+	}
 	MTPushPrivatesApi.setCollectControl(res);
 }
 
