@@ -67,25 +67,25 @@
 				getNotiAuth();
 				// #endif
 			},
-			initPushAction() {
-				console.log('initPush');
+			// initPushAction() {
+			// 	console.log('initPush');
 				
-				// // #ifdef APP-ANDROID
-				// 	let control = {
-				// 		gaid: false,
-				// 		aid: false
-				// 	} as CollectControl;
-				// 	setCollectControl(control);
-				// // #endif
+			// 	// // #ifdef APP-ANDROID
+			// 	// 	let control = {
+			// 	// 		gaid: false,
+			// 	// 		aid: false
+			// 	// 	} as CollectControl;
+			// 	// 	setCollectControl(control);
+			// 	// // #endif
 				
-				// appkey对iOS生效，安卓的appkey需要配置在manifestPlaceholders.json中
-				let options = {
-					appkey: '5645a6e0c6ef00bb71facf21',
-					channel: 'test',
-					isProduction : false	
-				} as InitPushParams;
-				initPush(options);
-			},
+			// 	// appkey对iOS生效，安卓的appkey需要配置在manifestPlaceholders.json中
+			// 	let options = {
+			// 		appkey: '5645a6e0c6ef00bb71facf21',
+			// 		channel: 'test',
+			// 		isProduction : false	
+			// 	} as InitPushParams;
+			// 	initPush(options);
+			// },
 			openDebugMode() {
 				setDebugMode(true)
 			},

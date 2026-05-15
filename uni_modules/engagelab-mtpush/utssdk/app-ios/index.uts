@@ -41,6 +41,11 @@ export class MTPushHookModule implements UTSiOSHookProxy {
 	applicationDidFinishLaunchingWithOptions(application: UIApplication | null, launchOptions: Map<UIApplication.LaunchOptionsKey, any> | null = null): boolean {
 		    MTPushTool.launchOptions = launchOptions;
 			console.log("applicationDidFinishLaunchingWithOptions");
+			
+			const entity = MTPushRegisterEntity()
+			entity.types = 0
+			MTPushService.register(forRemoteNotificationConfig = entity, delegate = MTPushTool)
+			
 		    return true
 		}
 	
@@ -67,13 +72,6 @@ class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate
 	launchOptions: Map<UIApplication.LaunchOptionsKey, any> | null = null;
 	
 	initPush(param: InitPushParams) {
-		let entity = MTPushRegisterEntity()
-		let types = new MTPushAuthorizationOptions(rawValue=(MTPushAuthorizationOptions.alert.rawValue |
-		                                                              MTPushAuthorizationOptions.sound.rawValue |
-		                                                              MTPushAuthorizationOptions.badge.rawValue
-		                                                              ))
-		entity.types = Int(types.rawValue)
-		MTPushService.register(forRemoteNotificationConfig=entity, delegate=this)
 		MTPushService.setInAppMessageDelegate(this)
 		MTPushService.setNotiInMessageDelegate(this)
 		const method = Selector("didReceiveCustomMessage:")
@@ -83,6 +81,13 @@ class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate
 		const method2 = Selector("networkDidClose:")
 		NotificationCenter.default.addObserver(this, selector = method2, name = NSNotification.Name.mtcNetworkDidClose, object = null)
 		MTPushService.setup(withOption=this.launchOptions, appKey=param.appkey, channel=param.channel, apsForProduction=param.isProduction);
+		let entity = MTPushRegisterEntity()
+		let types = new MTPushAuthorizationOptions(rawValue=(MTPushAuthorizationOptions.alert.rawValue |
+		                                                              MTPushAuthorizationOptions.sound.rawValue |
+		                                                              MTPushAuthorizationOptions.badge.rawValue
+		                                                              ))
+		entity.types = Int(types.rawValue)
+		MTPushService.register(forRemoteNotificationConfig=entity, delegate=this)
 	}
 	
 	@objc  didReceiveCustomMessage(notification: Notification) {
@@ -129,7 +134,9 @@ class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate
 	
 	
 	registerDeviceToken(token: Data | null) {
-		MTPushService.registerDeviceToken(token);
+		if (token != null) {
+			MTPushService.registerDeviceToken(token!);
+		}
 	}
 	
 	// 通知回调
@@ -185,10 +192,10 @@ class MTPushModule implements MTPushRegisterDelegate, MTPushInAppMessageDelegate
 		
 	 }
 	 
-	mtpNotificationCenter(center: UNUserNotificationCenter, @argumentLabel("openSettingsFor") notification: UNNotification) {
+	mtpNotificationCenter(center: UNUserNotificationCenter, @argumentLabel("openSettingsFor") notification: UNNotification | null) {
 	}
 	     
-	mtpNotificationAuthorization(status: MTPushAuthorizationStatus, @argumentLabel("withInfo") info: Map<AnyHashable, any>) {      
+	mtpNotificationAuthorization(status: MTPushAuthorizationStatus, @argumentLabel("withInfo") info: Map<AnyHashable, any> | null) {
 	}
 	
 	// 应用内消息回调
@@ -456,7 +463,7 @@ export function addEventCallBack(param: EventCallBackParams) : void {
 }
 
 export function getRegistrationId(): string {
-	const rid: String = MTPushService.registrationID()
+	const rid: String = MTPushService.registrationID() ?? ""
 	return rid
 }
 

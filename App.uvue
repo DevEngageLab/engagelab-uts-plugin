@@ -1,9 +1,21 @@
 <script lang="uts">
+	import { initPush,InitPushParams,setDebugMode } from "uni_modules/engagelab-mtpush";
+
 	let firstBackTime = 0
 	export default {
 		onLaunch: function () {
 			console.log('App Launch')
+			console.log('initPush');
+			setDebugMode(true)
+			// appkey对iOS生效，安卓的appkey需要配置在manifestPlaceholders.json中
+			let options = {
+				appkey: '5645a6e0c6ef00bb71facf21',
+				channel: 'test',
+				isProduction : false	
+			} as InitPushParams;
+			initPush(options);
 		},
+		
 		onShow: function () {
 			console.log('App Show')
 		},

@@ -5,3 +5,6 @@ unpackage/
 nativeResources/android/agconnect-services.json
 nativeResources/android/google-services.json
 
+# Claude Code local settings
+.claude/settings.local.json
+
