@@ -1,5 +1,7 @@
+## 1.0.9（2026-05-15）
+adjust support version
 ## 1.0.8（2026-05-15）
-1. Fix the iOS compilation failure issue. 
+1. Fix the iOS compilation failure issue.
 ## 1.0.7（2026-01-20）
 1. update ios sdk 5.3.0 & android sdk 5.3.0
 2. android update setCollectControl api, add aid parameter support

@@ -1,7 +1,7 @@
 {
   "id": "engagelab-mtpush",
   "displayName": "engagelab-mtpush",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Engagelab Push官方UTS插件",
   "keywords": [
     "engagelab-mtpush",
@@ -11,8 +11,8 @@
   "repository": "https://github.com/DevEngageLab/engagelab-uts-plugin",
   "engines": {
     "HBuilderX": "^3.6.8",
-    "uni-app": "^3.6.15",
-    "uni-app-x": "^3.6.15"
+    "uni-app": "^3.7.7",
+    "uni-app-x": "^3.7.7"
   },
   "dcloudext": {
     "type": "uts",
