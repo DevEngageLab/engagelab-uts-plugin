@@ -1,3 +1,7 @@
+## 1.1.0（2026-05-28）
+1. update ios sdk 5.4.0 & android sdk 5.4.0
+2. android 5.4.0: AndroidId 默认不再采集，CollectControl 中 aid 字段已废弃
+3. android 5.4.0: 小米厂商 SDK 从 6.0.1 升级至 7.9.2
 ## 1.0.9（2026-05-15）
 adjust support version
 ## 1.0.8（2026-05-15）

@@ -55,15 +55,17 @@ export const initPush: InitPush = function (param: InitPushParams) : void {
 
 export type CollectControl = {
 	gaid? : boolean,
+	// @deprecated 自 Android SDK 5.4.0 起，AndroidId 默认不再采集，aid 字段已废弃，传入无效
 	aid? : boolean
 }
 
 export const setCollectControl = function(control: CollectControl): void {
-	
+
 	var res = new MTPushCollectControl();
 	if (control.gaid !== undefined) {
 		res.gaid = control.gaid;
 	}
+	// aid 字段自 SDK 5.4.0 起已废弃，AndroidId 默认不再采集
 	if (control.aid !== undefined) {
 		res.aid = control.aid;
 	}

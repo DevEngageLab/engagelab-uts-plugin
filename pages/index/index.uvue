@@ -73,7 +73,7 @@
 			// 	// // #ifdef APP-ANDROID
 			// 	// 	let control = {
 			// 	// 		gaid: false,
-			// 	// 		aid: false
+			// 	// 		// aid: false  // 注意：aid 字段自 Android SDK 5.4.0 起已废弃，AndroidId 默认不再采集
 			// 	// 	} as CollectControl;
 			// 	// 	setCollectControl(control);
 			// 	// // #endif

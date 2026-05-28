@@ -1,7 +1,7 @@
 {
   "id": "engagelab-mtpush",
   "displayName": "engagelab-mtpush",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Engagelab Push官方UTS插件",
   "keywords": [
     "engagelab-mtpush",
@@ -11,8 +11,8 @@
   "repository": "https://github.com/DevEngageLab/engagelab-uts-plugin",
   "engines": {
     "HBuilderX": "^3.6.8",
-    "uni-app": "^3.7.7",
-    "uni-app-x": "^3.7.7"
+    "uni-app": "^3.7.8",
+    "uni-app-x": "^3.7.8"
   },
   "dcloudext": {
     "type": "uts",
@@ -60,12 +60,12 @@
             "vue": "-",
             "nvue": "-",
             "android": {
-                "extVersion": "1.0.0",
-                "minVersion": "23"
+              "extVersion": "1.0.0",
+              "minVersion": "23"
             },
             "ios": {
-                "extVersion": "1.0.0",
-                "minVersion": "12"
+              "extVersion": "1.0.0",
+              "minVersion": "12"
             },
             "harmony": "-"
           },
@@ -92,12 +92,12 @@
           },
           "app": {
             "android": {
-                "extVersion": "1.0.0",
-                "minVersion": "23"
+              "extVersion": "1.0.0",
+              "minVersion": "23"
             },
             "ios": {
-                "extVersion": "1.0.0",
-                "minVersion": "12"
+              "extVersion": "1.0.0",
+              "minVersion": "12"
             },
             "harmony": "-"
           },
