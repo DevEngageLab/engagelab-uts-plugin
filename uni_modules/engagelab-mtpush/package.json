@@ -1,13 +1,13 @@
 {
   "id": "engagelab-mtpush",
   "displayName": "engagelab-mtpush",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Engagelab Push官方UTS插件",
   "keywords": [
     "engagelab-mtpush",
     "Engagelab",
     "Push"
-],
+  ],
   "repository": "https://github.com/DevEngageLab/engagelab-uts-plugin",
   "engines": {
     "HBuilderX": "^3.6.8",

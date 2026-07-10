@@ -2,7 +2,7 @@
  * Copyright (c) 2011 ~ 2017 Shenzhen MT. All rights reserved.
  */
 
-#define MTP_VERSION_NUMBER 5.4.0
+#define MTP_VERSION_NUMBER 5.4.1
 
 #import <Foundation/Foundation.h>
 
@@ -645,6 +645,25 @@ typedef NS_ENUM(NSUInteger, MTPushAuthorizationStatus) {
  * @discussion 不设置的话使用默认的数据中心。此接口必须在 初始化函数之前 调用.
  */
 + (void)setSiteName:(NSString *)siteName __attribute__((deprecated("MTPush 4.3.5 版本已过期")));
+
+
+/*!
+ * @abstract 上报自定义消息展示
+ *
+ * @param messageId 消息ID，从自定义消息回调 userInfo[@"_j_msgid"] 中取，不为空
+ *
+ * @discussion 客户在完成自定义消息可视化展示后调用。消息到达 ≠ 展示，只有主动调用后才计入展示数。
+ */
++ (void)reportCustomDisplay:(NSString *)messageId;
+
+/*!
+ * @abstract 上报自定义消息点击
+ *
+ * @param messageId 消息ID，从自定义消息回调 userInfo[@"_j_msgid"] 中取，不为空
+ *
+ * @discussion 客户在用户点击自定义消息后调用。打开 App ≠ 点击，必须是由该消息触发的用户交互。
+ */
++ (void)reportCustomClick:(NSString *)messageId;
 
 
 @end

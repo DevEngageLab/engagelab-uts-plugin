@@ -467,6 +467,22 @@ export function getRegistrationId(): string {
 	return rid
 }
 
+/**
+ * 上报自定义消息展示
+ * @param messageId Engagelab消息id，不为空
+ */
+export function reportCustomDisplay(messageId: string):void {
+	MTPushService.reportCustomDisplay(messageId);
+}
+
+/**
+ * 上报自定义消息点击
+ * @param messageId Engagelab消息id，不为空
+ */
+export function reportCustomClick(messageId: string):void {
+	MTPushService.reportCustomClick(messageId);
+}
+
 
 export function getNotiAuth():void {
 	MTPushService.requestNotificationAuthorization((status: MTPushAuthorizationStatus):void => {

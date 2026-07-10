@@ -1,3 +1,7 @@
+## 1.1.1（2026-07-02）
+1. update ios sdk 5.4.1 & android sdk 5.4.1
+2. 新增 reportCustomDisplay(messageId, platform, platformMessageId)：上报自定义消息展示数据（Android 需 platform/platformMessageId，iOS 仅需 messageId）
+3. 新增 reportCustomClick(messageId, platform, platformMessageId)：上报自定义消息点击数据，参数同上
 ## 1.1.0（2026-05-28）
 1. update ios sdk 5.4.0 & android sdk 5.4.0
 2. android 5.4.0: AndroidId 默认不再采集，CollectControl 中 aid 字段已废弃
