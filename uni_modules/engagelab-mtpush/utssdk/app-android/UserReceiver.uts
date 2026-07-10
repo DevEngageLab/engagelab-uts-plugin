@@ -14,6 +14,7 @@ import MobileNumberMessage from 'com.engagelab.privates.push.api.MobileNumberMes
 import NotificationMessage from 'com.engagelab.privates.push.api.NotificationMessage';
 import PlatformTokenMessage from 'com.engagelab.privates.push.api.PlatformTokenMessage';
 import TagMessage from 'com.engagelab.privates.push.api.TagMessage';
+import VoipDataMessage from 'com.engagelab.privates.push.api.VoipDataMessage';
 
 import { mtptool , MTPTool } from "./index.uts"
 import { EventCallBack, EventCallBackParams } from '../interface.uts';
@@ -273,24 +274,48 @@ export class UserReceiver extends MTCommonReceiver {
 
     override onInAppMessageClick(context: Context, inAppMessage: InAppMessage):void {
         console.log("onInAppMessageClick");
-		
+
 		const map = new Map<string, any>();
 		map.set("messageId", inAppMessage.getMessageId() ?? "");
 		map.set("target", inAppMessage.getTarget() ?? "");
 		map.set("content", inAppMessage.getContent() ?? "");
 		map.set("clickAction", inAppMessage.getClick() ?? "");
 		map.set("extras", inAppMessage.getExtras() ?? "");
-		
+
 		console.log("onInAppMessageClick: map:",map);
-		
+
 		const res : EventCallBack = {
 		  eventName: "onInAppMessageClick",
 		  eventData: map
 		};
 		mtptool.eventCallBack?.callback?.(res);
     }
-	
-	
+
+    /**
+     * VoIP消息回调，支持厂商：小米、OPPO、vivo、荣耀
+     *
+     * @param context         不为空
+     * @param voipDataMessage VoIP消息
+     */
+    override onVoipMessage(context: Context, voipDataMessage: VoipDataMessage):void {
+        console.log("onVoipMessage:");
+
+		const map = new Map<string, any>();
+		map.set("messageId", voipDataMessage.getMessageId() ?? "");
+		map.set("appkey", voipDataMessage.getAppkey() ?? "");
+		map.set("extraData", voipDataMessage.getExtraData() ?? "");
+		map.set("platform", voipDataMessage.getPlatform());
+
+		console.log("onVoipMessage: map:",map);
+
+		const res : EventCallBack = {
+		  eventName: "onVoipMessage",
+		  eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+    }
+
+
 	callbackNotificationMessage(notificationMessage: NotificationMessage, name: string) {
 		const map = new Map<string, any>();
 		map.set("badge", notificationMessage.getBadge());

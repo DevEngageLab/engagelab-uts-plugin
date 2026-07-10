@@ -7,12 +7,12 @@
     "engagelab-mtpush",
     "Engagelab",
     "Push"
-  ],
+],
   "repository": "https://github.com/DevEngageLab/engagelab-uts-plugin",
   "engines": {
     "HBuilderX": "^3.6.8",
-    "uni-app": "^3.7.8",
-    "uni-app-x": "^3.7.8"
+    "uni-app": "^3.8.0",
+    "uni-app-x": "^3.8.1"
   },
   "dcloudext": {
     "type": "uts",
@@ -78,7 +78,8 @@
             "jd": "-",
             "harmony": "-",
             "qq": "-",
-            "lark": "-"
+            "lark": "-",
+            "xhs": "-"
           },
           "quickapp": {
             "huawei": "-",
