@@ -1,6 +1,6 @@
 {
 	"dependencies": [
-			"com.engagelab:engagelab:5.4.2",
+			"com.engagelab:engagelab:5.4.3",
 			"com.engagelab.plugin:google:5.4.2",
 			"com.engagelab.plugin:honor:5.4.2",
 			"com.engagelab.plugin:honor_th_push:5.4.2",
@@ -9,9 +9,9 @@
 			"com.engagelab.plugin:mi_th_push:5.4.2",
 			"com.engagelab.plugin:meizu:5.4.2",
 			"com.engagelab.plugin:meizu_th_push:5.4.2",
-			"com.engagelab.plugin:oppo:5.4.2",
-			"com.engagelab.plugin:oppo_th_push:5.4.2",
-			"com.engagelab.plugin:vivo:5.4.2",
+			"com.engagelab.plugin:oppo:5.4.3",
+			"com.engagelab.plugin:oppo_th_push:5.4.3",
+			"com.engagelab.plugin:vivo:5.4.3",
 			"com.google.firebase:firebase-messaging:25.0.0",
 			"com.huawei.hms:push:6.13.0.300",
 			"com.google.code.gson:gson:2.10.1",
