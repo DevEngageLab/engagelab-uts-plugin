@@ -1,3 +1,7 @@
+## 1.1.2（2026-08-19）
+1. Android SDK 升级至 5.4.3。
+2. 支持 OPPO 与 vivo 厂商消息角标处理。
+
 ## 1.1.1（2026-07-17）
 1. update ios sdk 5.4.1 & android sdk 5.4.2
 2. 新增 reportCustomDisplay(messageId, platform, platformMessageId)：上报自定义消息展示数据（Android 需 platform/platformMessageId，iOS 仅需 messageId）
