@@ -11,8 +11,8 @@
   "repository": "https://github.com/DevEngageLab/engagelab-uts-plugin",
   "engines": {
     "HBuilderX": "^3.6.8",
-    "uni-app": "^3.8.0",
-    "uni-app-x": "^3.8.1"
+    "uni-app": "^3.8.3",
+    "uni-app-x": "^3.8.4"
   },
   "dcloudext": {
     "type": "uts",
