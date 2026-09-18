@@ -33,6 +33,7 @@ import Address from 'com.engagelab.privates.core.api.Address';
 import MTCorePrivatesApi from 'com.engagelab.privates.core.api.MTCorePrivatesApi';
 import MTPushPrivatesApi from 'com.engagelab.privates.push.api.MTPushPrivatesApi';
 import MTPushCollectControl from 'com.engagelab.privates.push.api.MTPushCollectControl';
+import ArrayList from 'java.util.ArrayList';
 
 
 
@@ -86,6 +87,17 @@ export const setBadge: SetBadge = function (param: number) : void {
 
 export const addTags = function (sequence : Int, tags : string[]) : void {
 	MTPushPrivatesApi.addTag(UTSAndroid.getAppContext(), sequence, ...tags);
+}
+
+/**
+ * 请求订阅小米消息频道，结果通过 onCommandResult 事件返回。
+ */
+export function requestSubscribeChannel(channelIds: string[]) : void {
+	const channels = new ArrayList<string>();
+	for (const channelId of channelIds) {
+		channels.add(channelId);
+	}
+	MTPushPrivatesApi.requestSubscribeChannel(UTSAndroid.getAppContext(), channels);
 }
 
 export const setTags = function (sequence : Int, tags : string[]) : void {

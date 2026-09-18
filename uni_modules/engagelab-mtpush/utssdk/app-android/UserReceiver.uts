@@ -8,6 +8,7 @@ import MTCommonReceiver from 'com.engagelab.privates.common.component.MTCommonRe
 import MTCorePrivatesApi from 'com.engagelab.privates.core.api.MTCorePrivatesApi';
 import WakeMessage from 'com.engagelab.privates.core.api.WakeMessage';
 import AliasMessage from 'com.engagelab.privates.push.api.AliasMessage';
+import CmdMessage from 'com.engagelab.privates.push.api.CmdMessage';
 import CustomMessage from 'com.engagelab.privates.push.api.CustomMessage';
 import InAppMessage from 'com.engagelab.privates.push.api.InAppMessage';
 import MobileNumberMessage from 'com.engagelab.privates.push.api.MobileNumberMessage';
@@ -156,6 +157,33 @@ export class UserReceiver extends MTCommonReceiver {
 		};
 		mtptool.eventCallBack?.callback?.(res);
     }
+
+	/**
+	 * 通用命令结果回调，小米订阅消息结果也通过此回调返回。
+	 */
+	override onCommandResult(context: Context, cmdMessage: CmdMessage): void {
+		console.log("onCommandResult:", cmdMessage.toString());
+		const map = new Map<string, any>();
+		map.set("cmd", cmdMessage.cmd);
+		map.set("errorCode", cmdMessage.errorCode);
+		map.set("msg", cmdMessage.msg ?? "");
+		const extraMap = new Map<string, any>();
+		if (cmdMessage.extra != null) {
+			const extraBundle: Bundle = cmdMessage.extra;
+			for (key in extraBundle.keySet()) {
+				const value = extraBundle.get(key);
+				if (value != null) {
+					extraMap.set(key, value);
+				}
+			}
+		}
+		map.set("extra", extraMap);
+		const res: EventCallBack = {
+			eventName: "onCommandResult",
+			eventData: map
+		};
+		mtptool.eventCallBack?.callback?.(res);
+	}
 	
 	
 	
