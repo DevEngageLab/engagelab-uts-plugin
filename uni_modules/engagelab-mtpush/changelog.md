@@ -1,4 +1,4 @@
-## 1.1.7（2026-09-18）
+## 1.1.7（2026-09-20）
 1. Android SDK 及厂商插件升级至 5.5.1，iOS SDK 保持 5.4.4。
 2. 插件 Android 端新增 `requestSubscribeChannel(channelIds)` 小米消息频道订阅接口；结果通过 `addEventCallBack` 注册的 `onCommandResult` 事件返回（小米订阅命令 `cmd = 2012`）。
 3. 小米 Push SDK 升级至 7.12.4。
