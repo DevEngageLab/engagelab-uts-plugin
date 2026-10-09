@@ -1,3 +1,4 @@
+import Build from "android.os.Build"
 /**
  * 引用 Android 系统库，示例如下：
  * import { Context } from "android.content.Context";
@@ -89,9 +90,16 @@ export const addTags = function (sequence : Int, tags : string[]) : void {
 	MTPushPrivatesApi.addTag(UTSAndroid.getAppContext(), sequence, ...tags);
 }
 
-/**
- * 请求订阅小米消息频道，结果通过 onCommandResult 事件返回。
- */
+/** vivo subscription result is delivered through onCommandResult, cmd 2013. */
+export function requestVivoSubscribeChannel(channelIds: string[]) : void {
+    if (Build.MANUFACTURER.toLowerCase() != "vivo") { return; }
+    const activity = UTSAndroid.getUniActivity();
+    if (activity == null) { throw new Error("A foreground Activity is required"); }
+    const channels = new ArrayList<string>();
+    for (const channelId of channelIds) { channels.add(channelId); }
+    MTPushPrivatesApi.requestVivoSubscribeChannel(activity, channels);
+}
+
 export function requestSubscribeChannel(channelIds: string[]) : void {
 	const channels = new ArrayList<string>();
 	for (const channelId of channelIds) {
