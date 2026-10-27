@@ -18,12 +18,18 @@
 		<button type="primary" @click="setAliasAction">setAlias</button>
 		<button type="primary" @click="deleteAliasAction">deleteAlias</button>
 		<button type="primary" @click="getAliasAction">getAlias</button>
+		<!-- #ifdef APP-ANDROID -->
+		<button type="primary" @click="requestVivoSubscribeAction">vivo 通知渠道订阅</button>
+		<!-- #endif -->
 	</view>
 </template>
 
 <script>
 	// #ifdef APP-IOS 
 	import { getNotiAuth } from "../../uni_modules/engagelab-mtpush"
+	// #endif
+	// #ifdef APP-ANDROID
+	import { requestVivoSubscribeChannel } from "../../uni_modules/engagelab-mtpush";
 	// #endif
 	import {  
 		InitPushParams, 
@@ -58,6 +64,13 @@
 
 		},
 		methods: {
+			requestVivoSubscribeAction() {
+				// #ifdef APP-ANDROID
+				// 初始化并开启通知权限后，将 ID 替换为 vivo 后台的通知渠道 ID。
+				// 最终结果由 addEventCallBack 的 onCommandResult (cmd 2013) 返回。
+				requestVivoSubscribeChannel(["your_vivo_channel_id"]);
+				// #endif
+			},
 			testConfigGoogleAction() {
 				// 线上环境请不要调用该函数，仅安卓生效
 				testConfigGoogle(true);
@@ -66,6 +79,15 @@
 				// #ifdef APP-IOS 
 				getNotiAuth();
 				// #endif
+			},
+			initPushAction() {
+				// Android 使用 manifestPlaceholders.json 中配置的 AppKey。
+				const options = {
+					appkey: 'your_ios_appkey',
+					channel: 'test',
+					isProduction: false
+				} as InitPushParams;
+				initPush(options);
 			},
 			// initPushAction() {
 			// 	console.log('initPush');

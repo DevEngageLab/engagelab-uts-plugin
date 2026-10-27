@@ -64,12 +64,14 @@ export type CollectControl = {
 export const setCollectControl = function(control: CollectControl): void {
 
 	var res = new MTPushCollectControl();
-	if (control.gaid !== undefined) {
-		res.gaid = control.gaid;
+	const gaid = control.gaid;
+	if (gaid != null) {
+		res.gaid = gaid;
 	}
 	// aid 字段自 SDK 5.4.0 起已废弃，AndroidId 默认不再采集
-	if (control.aid !== undefined) {
-		res.aid = control.aid;
+	const aid = control.aid;
+	if (aid != null) {
+		res.aid = aid;
 	}
 	MTPushPrivatesApi.setCollectControl(res);
 }

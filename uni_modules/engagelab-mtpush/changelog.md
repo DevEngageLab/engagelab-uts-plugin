@@ -1,3 +1,9 @@
+## 1.1.8（2026-10-27）
+1. Android SDK 依赖升级至 5.5.3，iOS SDK 保持 5.4.4。
+2. 新增 `requestVivoSubscribeChannel(channelIds)`，请求 vivo 通知渠道订阅；最终结果通过 `onCommandResult` 返回（`cmd = 2013`）。
+3. vivo Push SDK 升级至 4.1.7.0_517，补充接口说明及按钮调用示例。
+4. 修复 Android UTS 编译时可选采集开关的空值判断与布尔值赋值，保留显式 false 和未传参时的既有行为。
+
 ## 1.1.7（2026-09-20）
 1. Android SDK 及厂商插件升级至 5.5.1，iOS SDK 保持 5.4.4。
 2. 插件 Android 端新增 `requestSubscribeChannel(channelIds)` 小米消息频道订阅接口；结果通过 `addEventCallBack` 注册的 `onCommandResult` 事件返回（小米订阅命令 `cmd = 2012`）。
