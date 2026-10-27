@@ -40,3 +40,5 @@ export type EventCallBackParams = {
 // export type AddTags = (param: AddTagsParams) => void
 
 
+
+export type RequestVivoSubscribeChannel = (channelIds: string[]) => void

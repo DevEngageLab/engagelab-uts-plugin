@@ -564,3 +564,5 @@ class EventCallbackManager {
 
 // 全局事件回调管理器实例
 const eventCallbackManager = new EventCallbackManager()
+// Android vivo subscription API is ignored on iOS.
+export function requestVivoSubscribeChannel(channelIds: string[]): void { }

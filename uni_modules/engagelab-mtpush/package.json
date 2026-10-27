@@ -1,13 +1,13 @@
 {
   "id": "engagelab-mtpush",
   "displayName": "engagelab-mtpush",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Engagelab Push官方UTS插件",
   "keywords": [
     "engagelab-mtpush",
     "Engagelab",
     "Push"
-],
+  ],
   "repository": "https://github.com/DevEngageLab/engagelab-uts-plugin",
   "engines": {
     "HBuilderX": "^3.6.8",
@@ -35,7 +35,8 @@
     "npmurl": "",
     "darkmode": "x",
     "i18n": "x",
-    "widescreen": "x"
+    "widescreen": "x",
+    "vapor": "-"
   },
   "uni_modules": {
     "dependencies": [],

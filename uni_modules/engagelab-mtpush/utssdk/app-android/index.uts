@@ -1,3 +1,4 @@
+import Build from "android.os.Build"
 /**
  * 引用 Android 系统库，示例如下：
  * import { Context } from "android.content.Context";
@@ -63,12 +64,14 @@ export type CollectControl = {
 export const setCollectControl = function(control: CollectControl): void {
 
 	var res = new MTPushCollectControl();
-	if (control.gaid !== undefined) {
-		res.gaid = control.gaid;
+	const gaid = control.gaid;
+	if (gaid != null) {
+		res.gaid = gaid;
 	}
 	// aid 字段自 SDK 5.4.0 起已废弃，AndroidId 默认不再采集
-	if (control.aid !== undefined) {
-		res.aid = control.aid;
+	const aid = control.aid;
+	if (aid != null) {
+		res.aid = aid;
 	}
 	MTPushPrivatesApi.setCollectControl(res);
 }
@@ -89,9 +92,16 @@ export const addTags = function (sequence : Int, tags : string[]) : void {
 	MTPushPrivatesApi.addTag(UTSAndroid.getAppContext(), sequence, ...tags);
 }
 
-/**
- * 请求订阅小米消息频道，结果通过 onCommandResult 事件返回。
- */
+/** vivo subscription result is delivered through onCommandResult, cmd 2013. */
+export function requestVivoSubscribeChannel(channelIds: string[]) : void {
+    if (Build.MANUFACTURER.toLowerCase() != "vivo") { return; }
+    const activity = UTSAndroid.getUniActivity();
+    if (activity == null) { throw new Error("A foreground Activity is required"); }
+    const channels = new ArrayList<string>();
+    for (const channelId of channelIds) { channels.add(channelId); }
+    MTPushPrivatesApi.requestVivoSubscribeChannel(activity, channels);
+}
+
 export function requestSubscribeChannel(channelIds: string[]) : void {
 	const channels = new ArrayList<string>();
 	for (const channelId of channelIds) {
